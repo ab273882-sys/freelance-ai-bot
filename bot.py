@@ -5,6 +5,7 @@ import re
 import sqlite3
 from datetime import datetime, timezone
 from urllib.parse import urlparse
+from pathlib import Path
 
 import feedparser
 from dotenv import load_dotenv
