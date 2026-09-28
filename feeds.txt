@@ -1,2 +1,7 @@
-# Вставляй сюда RSS-ссылки на поисковые выдачи или ленты вакансий.
-# Одна ссылка на строку. Не все фриланс-биржи предоставляют RSS.
+https://weworkremotely.com/remote-jobs.rss
+https://weworkremotely.com/categories/remote-design-jobs.rss
+https://remoteok.com/remote-jobs.rss
+https://hnrss.org/jobs
+https://remote.co/feed/
+https://himalayas.app/jobs/rss
+https://jobscollider.com/remote-jobs.rss
