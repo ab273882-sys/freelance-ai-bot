@@ -75,7 +75,7 @@ async def status(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if not is_owner(update):
         await private(update, "Доступ закрыт. Сначала настрой OWNER_TELEGRAM_ID в переменных окружения.")
         return
-    await private(update, f"🟢 Бот запущен\nИнтервал проверки: {SCAN_MINUTES} мин.\nRSS-источников: {len(load_feeds())}\nИИ: {'подключён' if OPENAI_API_KEY else 'не подключён (работает фильтр по ключевым словам)'}")
+   await private(update, f"🟢 Бот запущен\nИнтервал проверки: {SCAN_MINUTES} мин.\nRSS-источников: {len(load_feeds())}\nИИ: {'подключён' if os.getenv('GEMINI_API_KEY', '').strip() else 'не подключён (работает фильтр по ключевым словам)'}")
 
 
 async def sources(update: Update, context: ContextTypes.DEFAULT_TYPE):
