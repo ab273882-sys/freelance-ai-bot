@@ -10,7 +10,7 @@ from urllib.request import Request, urlopen
 
 import feedparser
 from dotenv import load_dotenv
-from openai import OpenAI
+from google import genai
 from telegram import Update
 from telegram.ext import Application, CommandHandler, ContextTypes
 
@@ -117,29 +117,58 @@ def fetch_feed(feed_url):
 
 
 def ai_review(title, summary, link):
-    keyword_match = any(k in (title + " " + summary).lower() for k in KEYWORDS)
-    if not OPENAI_API_KEY:
+    keyword_match = any(
+        k in (title + " " + summary).lower()
+        for k in KEYWORDS
+    )
+
+    api_key = os.getenv("GEMINI_API_KEY", "").strip()
+
+    if not api_key:
         return keyword_match, 0, "Совпадение по ключевым словам"
+
     try:
-        client = OpenAI(api_key=OPENAI_API_KEY, timeout=AI_TIMEOUT, max_retries=0)
-        response = client.responses.create(
-            model=OPENAI_MODEL,
-            input=(
-                "Ты фильтр заказов для фрилансера, который делает дизайн и инфографику "
-                "карточек товаров для маркетплейсов. Оцени только соответствие задачи. "
-                "Не выдумывай бюджет или детали. Если это заказ на оформление карточек товара, "
-                "изображения товара, инфографику или дизайн листинга — ответь MATCH; иначе SKIP. "
-                "Формат строго: MATCH|число от 0 до 100|краткая причина ИЛИ SKIP.\n\n"
-                f"Заголовок: {title}\nОписание: {summary[:4000]}\nСсылка: {link}"
-            ))
-        result = response.output_text.strip()
-        m = re.match(r"MATCH\|(\d{1,3})\|(.*)", result, re.I | re.S)
-        if m:
-            return True, min(100, int(m.group(1))), m.group(2).strip()[:300]
+        client = genai.Client(api_key=api_key)
+
+        response = client.models.generate_content(
+            model="gemini-2.5-flash",
+            contents=(
+                "Ты фильтр заказов для фрилансера, "
+                "который занимается дизайном карточек товаров "
+                "и инфографикой для маркетплейсов.\n"
+                "Определи, подходит ли объявление.\n"
+                "Если подходит, ответь строго в формате:\n"
+                "MATCH|число от 0 до 100|краткая причина\n"
+                "Если не подходит, ответь SKIP.\n\n"
+                f"Заголовок: {title}\n"
+                f"Описание: {summary[:4000]}\n"
+                f"Ссылка: {link}"
+            )
+        )
+
+        result = (response.text or "").strip()
+        match = re.match(
+            r"MATCH\|(\d{1,3})\|(.*)",
+            result,
+            re.I | re.S
+        )
+
+        if match:
+            return (
+                True,
+                min(100, int(match.group(1))),
+                match.group(2).strip()[:300]
+            )
+
         return False, 0, "Не подходит по оценке ИИ"
+
     except Exception:
-        log.exception("AI review failed; using keyword filter")
-        return keyword_match, 0, "Совпадение по ключевым словам (ИИ временно недоступен)"
+        log.exception("Gemini review failed; using keyword filter")
+        return (
+            keyword_match,
+            0,
+            "Совпадение по ключевым словам (ИИ временно недоступен)"
+        )
 
 
 def scan():
