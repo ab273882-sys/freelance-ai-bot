@@ -1,16 +1,14 @@
-import asyncio
+
+import html
 import logging
 import os
 import re
 import sqlite3
 from datetime import datetime, timezone
-from pathlib import Path
-from urllib.parse import urlparse
-from urllib.request import Request, urlopen
 
-import feedparser
 from dotenv import load_dotenv
-from google import genai
+from telethon import TelegramClient
+from telethon.sessions import StringSession
 from telegram import Update
 from telegram.ext import Application, CommandHandler, ContextTypes
 
@@ -18,233 +16,257 @@ load_dotenv()
 
 BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN", "").strip()
 OWNER_ID = os.getenv("OWNER_TELEGRAM_ID", "").strip()
-GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "").strip()
-GEMINI_MODEL = os.getenv("GEMINI_MODEL", "gemini-2.5-flash").strip()
+TG_API_ID = os.getenv("TG_API_ID", "").strip()
+TG_API_HASH = os.getenv("TG_API_HASH", "").strip()
+TELETHON_SESSION = os.getenv("TELETHON_SESSION", "").strip()
 SCAN_MINUTES = max(5, int(os.getenv("SCAN_MINUTES", "15")))
 DB_PATH = os.getenv("DB_PATH", "jobs.sqlite3")
-FEEDS_FILE = os.getenv("FEEDS_FILE", "feeds.txt")
-FEED_TIMEOUT = max(5, int(os.getenv("FEED_TIMEOUT_SECONDS", "12")))
-MAX_ENTRIES = max(1, int(os.getenv("MAX_ENTRIES_PER_FEED", "20")))
+MAX_MESSAGES_PER_CHANNEL = max(1, int(os.getenv("MAX_MESSAGES_PER_CHANNEL", "30")))
 
-logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
-log = logging.getLogger("freelance-ai")
-scan_lock = asyncio.Lock()
-
-KEYWORDS = [
-    "product listing", "product images", "amazon listing", "ecommerce",
-    "e-commerce", "product card", "product infographic", "listing design",
-    "wildberries", "wildberries card", "ozon", "карточк", "инфографик",
-    "дизайн товара", "оформление товара", "маркетплейс", "товарная карточка",
+# Начальный список. Доступность и активность каналов проверяются при запуске.
+CHANNELS = [
+    "@MPdesigns",
+    "@free_design1",
+    "@infograficdz",
+    "@zakaz_design",
+    "@designwork_vacansii",
+    "@remotejobss",
+    "@workmarketplaces",
+    "@marketplacejob",
+    "@design_vacancy",
+    "@Designs_squad",
+    "@freelancetaverna",
+    "@FreelanceBay",
 ]
+
+POSITIVE = [
+    "ищу дизайнера", "нужен дизайнер", "нужна дизайнер", "требуется дизайнер",
+    "ищем дизайнера", "ищу инфограф", "нужна инфограф", "инфографика",
+    "карточк", "wildberries", "wildberries", "wb", "ozon", "озон",
+    "маркетплейс", "дизайн товара", "оформление товара", "слайд для товара",
+    "дизайн для товара", "карточек товара",
+]
+NEGATIVE = [
+    "предлагаю услуги", "мои услуги", "портфолио дизайнера", "ищу работу",
+    "ищу заказы", "возьму заказ", "обучение", "курс", "вебинар",
+]
+
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s %(levelname)s %(message)s",
+)
+log = logging.getLogger("freelance-bot")
+scan_lock = asyncio.Lock()
+user_client = None
 
 
 def db():
-    con = sqlite3.connect(DB_PATH, timeout=10)
-    con.execute("CREATE TABLE IF NOT EXISTS seen (key TEXT PRIMARY KEY, seen_at TEXT)")
+    con = sqlite3.connect(DB_PATH, timeout=20)
+    con.execute(
+        "CREATE TABLE IF NOT EXISTS seen "
+        "(key TEXT PRIMARY KEY, seen_at TEXT NOT NULL)"
+    )
     con.commit()
     return con
 
 
 def is_owner(update: Update) -> bool:
-    return bool(OWNER_ID) and update.effective_user is not None and str(update.effective_user.id) == OWNER_ID
+    return (
+        bool(OWNER_ID)
+        and update.effective_user is not None
+        and str(update.effective_user.id) == OWNER_ID
+    )
 
 
-async def private(update: Update, text: str):
+async def reply(update: Update, text: str):
     if update.effective_chat:
-        await update.effective_chat.send_message(text=text, disable_web_page_preview=True)
+        await update.effective_chat.send_message(
+            text=text, disable_web_page_preview=True
+        )
 
 
-async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    if not OWNER_ID:
-        await private(update, "Бот почти настроен. Узнай свой Telegram ID командой /myid, затем впиши его в OWNER_TELEGRAM_ID в переменных окружения и перезапусти бота.")
-        return
-    if not is_owner(update):
-        await private(update, "Этот бот приватный.")
-        return
-    await private(update,
-        "Привет, Лёха! 🤖 Я ищу заказы на оформление карточек товаров и присылаю подходящие объявления.\n\n"
-        "Команды:\n/status — состояние бота\n/scan — проверить источники сейчас\n/sources — список RSS-источников\n/myid — твой Telegram ID\n\n"
-        "Поиск идёт по подключённым RSS-лентам. Добавь ссылки в feeds.txt и перезапусти бота.")
+def is_relevant(text: str) -> bool:
+    normalized = re.sub(r"\s+", " ", text.lower())
+    if any(word in normalized for word in NEGATIVE):
+        return False
+    return any(word in normalized for word in POSITIVE)
 
 
-async def myid(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await private(update, f"Твой Telegram ID: {update.effective_user.id if update.effective_user else 'не определён'}")
-
-
-async def status(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    if not is_owner(update):
-        await private(update, "Доступ закрыт. Проверь OWNER_TELEGRAM_ID.")
-        return
-    ai_status = f"ключ Gemini задан (модель: {GEMINI_MODEL})" if GEMINI_API_KEY else "не настроен (работает фильтр по ключевым словам)"
-    await private(update, f"🟢 Бот запущен\nИнтервал проверки: {SCAN_MINUTES} мин.\nRSS-источников: {len(load_feeds())}\nИИ: {ai_status}")
-
-
-async def sources(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    if not is_owner(update):
-        await private(update, "Доступ закрыт.")
-        return
-    feeds = load_feeds()
-    await private(update, "Подключённые RSS-источники:\n" + ("\n".join(f"• {x}" for x in feeds) if feeds else "Пока нет. Добавь RSS-ссылки в feeds.txt."))
-
-
-def load_feeds():
-    path = Path(FEEDS_FILE)
-    if not path.exists():
-        return []
-    return [line.strip() for line in path.read_text(encoding="utf-8").splitlines()
-            if line.strip() and not line.strip().startswith("#")
-            and urlparse(line.strip()).scheme in ("http", "https")]
-
-
-def already_seen(key):
+def was_seen(key: str) -> bool:
     with db() as con:
         return con.execute("SELECT 1 FROM seen WHERE key=?", (key,)).fetchone() is not None
 
 
-def mark_seen(key):
+def mark_seen(key: str):
     with db() as con:
-        con.execute("INSERT OR IGNORE INTO seen(key, seen_at) VALUES (?, ?)",
-                    (key, datetime.now(timezone.utc).isoformat()))
+        con.execute(
+            "INSERT OR IGNORE INTO seen(key, seen_at) VALUES (?, ?)",
+            (key, datetime.now(timezone.utc).isoformat()),
+        )
         con.commit()
 
 
-def fetch_feed(feed_url):
-    request = Request(feed_url, headers={
-        "User-Agent": "Mozilla/5.0 (compatible; FreelanceJobBot/1.0)",
-        "Accept": "application/rss+xml, application/atom+xml, application/xml, text/xml, */*",
-    })
-    with urlopen(request, timeout=FEED_TIMEOUT) as response:
-        return feedparser.parse(response.read())
+async def scan_channels(app: Application):
+    global user_client
+    if user_client is None or not user_client.is_connected():
+        raise RuntimeError("Telegram user session is not connected")
 
-
-def ai_review(title, summary, link):
-    keyword_match = any(k in (title + " " + summary).lower() for k in KEYWORDS)
-    if not GEMINI_API_KEY:
-        return keyword_match, 0, "Совпадение по ключевым словам"
-
-    try:
-        client = genai.Client(api_key=GEMINI_API_KEY)
-        response = client.models.generate_content(
-            model=GEMINI_MODEL,
-            contents=(
-                "Ты фильтр заказов для фрилансера, который занимается дизайном "
-                "карточек товаров и инфографикой для маркетплейсов. "
-                "Определи, подходит ли объявление. Не выдумывай факты.\n"
-                "Если подходит, ответь строго: MATCH|число от 0 до 100|краткая причина на русском\n"
-                "Если не подходит, ответь строго: SKIP\n\n"
-                f"Заголовок: {title}\nОписание: {summary[:4000]}\nСсылка: {link}"
-            ),
-        )
-        result = (response.text or "").strip()
-        result = re.sub(r"^```(?:text)?\s*|\s*```$", "", result, flags=re.I).strip()
-        match = re.match(r"MATCH\|(\d{1,3})\|(.*)", result, re.I | re.S)
-        if match:
-            return True, max(0, min(100, int(match.group(1)))), match.group(2).strip()[:300] or "Подходит по тематике"
-        return False, 0, "Не подходит по оценке ИИ"
-    except Exception:
-        log.exception("Gemini review failed; using keyword filter")
-        return keyword_match, 0, "Совпадение по ключевым словам (Gemini временно недоступен)"
-
-
-def scan():
-    found, checked, errors = [], 0, 0
-    feeds = load_feeds()
-    for feed_url in feeds:
+    checked = errors = found = 0
+    for channel in CHANNELS:
         try:
-            parsed = fetch_feed(feed_url)
-            if parsed.bozo and not parsed.entries:
-                errors += 1
-                log.warning("Feed parse error: %s: %s", feed_url, parsed.bozo_exception)
-                continue
+            entity = await user_client.get_entity(channel)
             checked += 1
-            for entry in parsed.entries[:MAX_ENTRIES]:
-                link = entry.get("link", "") or ""
-                title = entry.get("title", "Без названия") or "Без названия"
-                summary = re.sub(r"<[^>]+>", " ", entry.get("summary", "") or "")
-                summary = re.sub(r"\s+", " ", summary).strip()
-                key = entry.get("id") or link or (title + summary)
-                if not key or already_seen(key):
+            async for message in user_client.iter_messages(
+                entity, limit=MAX_MESSAGES_PER_CHANNEL
+            ):
+                body = (message.message or "").strip()
+                if not body:
                     continue
-                match, score, reason = ai_review(title, summary, link)
+                key = f"{entity.id}:{message.id}"
+                if was_seen(key):
+                    continue
+                # Помечаем просмотренным, чтобы не обрабатывать старые сообщения повторно.
                 mark_seen(key)
-                if match:
-                    found.append((title, summary, link, score, reason, feed_url))
+                if not is_relevant(body):
+                    continue
+
+                link = f"https://t.me/{channel.lstrip('@')}/{message.id}"
+                text = (
+                    "🆕 <b>Возможный заказ на дизайн карточек</b>\n\n"
+                    f"{html.escape(body[:3500])}\n\n"
+                    f'📣 Источник: {html.escape(channel)}\n'
+                    f'<a href="{html.escape(link, quote=True)}">Открыть сообщение</a>'
+                )
+                await app.bot.send_message(
+                    chat_id=int(OWNER_ID),
+                    text=text,
+                    parse_mode="HTML",
+                    disable_web_page_preview=True,
+                )
+                found += 1
         except Exception as exc:
             errors += 1
-            log.warning("Feed error: %s (%s)", feed_url, type(exc).__name__)
-            log.debug("Feed exception details", exc_info=True)
-    return found, checked, errors, len(feeds)
+            log.warning("Channel scan failed: %s (%s)", channel, type(exc).__name__)
+    return {"checked": checked, "errors": errors, "found": found, "total": len(CHANNELS)}
 
 
-def escape_html(s):
-    return s.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;").replace('"', "&quot;")
+async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    if not is_owner(update):
+        await reply(update, "Доступ закрыт. Проверь OWNER_TELEGRAM_ID.")
+        return
+    await reply(
+        update,
+        "Привет! Я ищу объявления о заказах на дизайн карточек товаров.\n\n"
+        "/status — состояние\n/scan — проверить каналы сейчас\n"
+        "Поиск работает без нейросети.",
+    )
+
+
+async def myid(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    await reply(
+        update,
+        f"Твой Telegram ID: {update.effective_user.id if update.effective_user else 'не определён'}",
+    )
+
+
+async def status(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    if not is_owner(update):
+        await reply(update, "Доступ закрыт.")
+        return
+    connected = user_client is not None and user_client.is_connected()
+    await reply(
+        update,
+        f"🟢 Бот запущен\n"
+        f"Telegram-аккаунт подключён: {'да' if connected else 'нет'}\n"
+        f"Каналов в списке: {len(CHANNELS)}\n"
+        f"Интервал проверки: {SCAN_MINUTES} мин.",
+    )
+
+
+async def scan_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    if not is_owner(update):
+        await reply(update, "Доступ закрыт.")
+        return
+    if scan_lock.locked():
+        await reply(update, "⏳ Проверка уже выполняется.")
+        return
+    await reply(update, "🔎 Проверяю Telegram-каналы…")
+    result = await run_scan(context.application)
+    if result is None:
+        await reply(update, "⚠️ Проверка не завершилась. Посмотри журнал FadeHost.")
+    else:
+        await reply(
+            update,
+            "✅ Проверка завершена.\n"
+            f"Доступно каналов: {result['checked']} из {result['total']}\n"
+            f"Ошибок: {result['errors']}\n"
+            f"Новых подходящих объявлений: {result['found']}",
+        )
 
 
 async def run_scan(app: Application):
     if not OWNER_ID:
-        log.warning("OWNER_TELEGRAM_ID is not set; scan notifications are disabled")
+        log.warning("OWNER_TELEGRAM_ID is not set; notifications disabled")
         return None
     async with scan_lock:
         try:
-            jobs, checked, errors, total = await asyncio.to_thread(scan)
-            for title, summary, link, score, reason, source in jobs:
-                text = (f"🆕 <b>Возможный заказ на карточки</b>\n\n"
-                        f"<b>{escape_html(title[:300])}</b>\n"
-                        f"{escape_html(summary[:900]) if summary else 'Описание не указано'}\n\n"
-                        f"🤖 Оценка соответствия: {score}/100\n"
-                        f"💡 {escape_html(reason)}\n"
-                        f"🔗 {escape_html(link)}\n"
-                        f"Источник: {escape_html(urlparse(source).netloc)}")
-                await app.bot.send_message(chat_id=int(OWNER_ID), text=text, parse_mode="HTML",
-                                           disable_web_page_preview=True)
-            return {"found": len(jobs), "checked": checked, "errors": errors, "total": total}
+            return await scan_channels(app)
         except Exception:
             log.exception("Scan failed")
             return None
 
 
-async def scan_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    if not is_owner(update):
-        await private(update, "Доступ закрыт.")
-        return
-    if scan_lock.locked():
-        await private(update, "⏳ Поиск уже выполняется. Дождись его завершения.")
-        return
-    await private(update, "🔎 Проверяю RSS-источники. Недоступные ленты будут пропущены…")
-    result = await run_scan(context.application)
-    if result is None:
-        await private(update, "⚠️ Проверка завершилась с ошибкой. Посмотри журнал FadeHost.")
-    elif result["total"] == 0:
-        await private(update, "В feeds.txt пока нет RSS-источников.")
-    else:
-        await private(update, "✅ Проверка завершена.\n"
-                              f"Успешно проверено источников: {result['checked']} из {result['total']}\n"
-                              f"Источников с ошибками: {result['errors']}\n"
-                              f"Новых подходящих объявлений: {result['found']}\n\n"
-                              "Если заказов нет, это не обязательно ошибка: в новых публикациях могло не быть подходящих задач.")
-
-
 async def scheduled_scan(context: ContextTypes.DEFAULT_TYPE):
     result = await run_scan(context.application)
     if result:
-        log.info("Scheduled scan complete: checked=%s/%s errors=%s found=%s",
-                 result["checked"], result["total"], result["errors"], result["found"])
+        log.info(
+            "Scan complete: checked=%s/%s errors=%s found=%s",
+            result["checked"], result["total"], result["errors"], result["found"],
+        )
 
 
 async def post_init(app: Application):
+    global user_client
+    if not all([TG_API_ID, TG_API_HASH, TELETHON_SESSION]):
+        log.warning("Telegram user session settings are incomplete")
+        return
+    user_client = TelegramClient(
+        StringSession(TELETHON_SESSION), int(TG_API_ID), TG_API_HASH
+    )
+    await user_client.connect()
+    if not await user_client.is_user_authorized():
+        raise RuntimeError("TELETHON_SESSION is not authorized")
+    log.info("Telegram user session connected")
     if OWNER_ID:
-        app.job_queue.run_repeating(scheduled_scan, interval=SCAN_MINUTES * 60,
-                                    first=5, name="job-search")
+        app.job_queue.run_repeating(
+            scheduled_scan,
+            interval=SCAN_MINUTES * 60,
+            first=5,
+            name="telegram-channel-search",
+        )
+
+
+async def post_shutdown(app: Application):
+    global user_client
+    if user_client is not None and user_client.is_connected():
+        await user_client.disconnect()
 
 
 def main():
     if not BOT_TOKEN:
-        raise SystemExit("Не задан TELEGRAM_BOT_TOKEN в переменных окружения")
-    app = Application.builder().token(BOT_TOKEN).post_init(post_init).build()
+        raise SystemExit("TELEGRAM_BOT_TOKEN is not set")
+    if not OWNER_ID:
+        log.warning("OWNER_TELEGRAM_ID is not set; notifications are disabled")
+    app = (
+        Application.builder()
+        .token(BOT_TOKEN)
+        .post_init(post_init)
+        .post_shutdown(post_shutdown)
+        .build()
+    )
     app.add_handler(CommandHandler("start", start))
     app.add_handler(CommandHandler("myid", myid))
     app.add_handler(CommandHandler("status", status))
-    app.add_handler(CommandHandler("sources", sources))
     app.add_handler(CommandHandler("scan", scan_command))
     app.run_polling()
 
