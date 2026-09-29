@@ -1,3 +1,4 @@
+import os
 
 MAX_ENTRIES = max(1, int(os.getenv("MAX_ENTRIES_PER_FEED", "20")))
 
