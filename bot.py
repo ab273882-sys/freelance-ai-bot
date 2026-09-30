@@ -46,6 +46,12 @@ CHANNELS = [
     "@Designs_squad",
     "@freelancetaverna",
     "@FreelanceBay",
+    "@dizain_wb_ozon",
+    "@dizainer_wb",
+    "@wb_ozon_designers",
+    "@designers_wb_ozon",
+    "@dizainerplace",
+    "@infografikamptop",
 ]
 
 POSITIVE = [
