@@ -17,6 +17,9 @@ load_dotenv()
 
 BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN", "").strip()
 OWNER_ID = os.getenv("OWNER_TELEGRAM_ID", "").strip()
+FRIEND_ID = "8476118466"
+ALLOWED_USER_IDS = {x for x in (OWNER_ID, FRIEND_ID) if x.isdigit()}
+
 TG_API_ID = os.getenv("TG_API_ID", "").strip()
 TG_API_HASH = os.getenv("TG_API_HASH", "").strip()
 TELETHON_SESSION = os.getenv("TELETHON_SESSION", "").strip()
@@ -26,11 +29,7 @@ DB_PATH = os.getenv("DB_PATH", "jobs.sqlite3")
 MAX_MESSAGES_PER_CHANNEL = max(
     1, int(os.getenv("MAX_MESSAGES_PER_CHANNEL", "30"))
 )
-
-# Максимальный возраст объявления в часах
 MAX_AGE_HOURS = max(1, int(os.getenv("MAX_AGE_HOURS", "24")))
-
-# Пауза между отправками уведомлений
 SEND_DELAY = max(1, int(os.getenv("SEND_DELAY", "2")))
 
 CHANNELS = [
@@ -53,8 +52,6 @@ CHANNELS = [
     "@dizainerplace",
     "@infografikamptop",
     "@dizainery_wildberries_ozon",
-    "@wb_ozon_designers",
-    "@dizainer_wb",
     "@Designs_job",
 ]
 
@@ -114,9 +111,8 @@ def db():
 
 def is_owner(update: Update) -> bool:
     return (
-        bool(OWNER_ID)
-        and update.effective_user is not None
-        and str(update.effective_user.id) == OWNER_ID
+        update.effective_user is not None
+        and str(update.effective_user.id) in ALLOWED_USER_IDS
     )
 
 
@@ -130,22 +126,16 @@ async def reply(update: Update, text: str):
 
 def is_relevant(text: str) -> bool:
     normalized = re.sub(r"\s+", " ", text.lower())
-
     if any(word in normalized for word in NEGATIVE):
         return False
-
     return any(word in normalized for word in POSITIVE)
 
 
 def was_seen(key: str) -> bool:
     with db() as con:
-        return (
-            con.execute(
-                "SELECT 1 FROM seen WHERE key=?",
-                (key,),
-            ).fetchone()
-            is not None
-        )
+        return con.execute(
+            "SELECT 1 FROM seen WHERE key=?", (key,)
+        ).fetchone() is not None
 
 
 def mark_seen(key: str):
@@ -160,63 +150,55 @@ def mark_seen(key: str):
 def is_recent(message) -> bool:
     if not message.date:
         return False
-
-    now = datetime.now(timezone.utc)
     message_date = message.date
-
     if message_date.tzinfo is None:
         message_date = message_date.replace(tzinfo=timezone.utc)
-
-    age = now - message_date
+    age = datetime.now(timezone.utc) - message_date
     return timedelta(0) <= age <= timedelta(hours=MAX_AGE_HOURS)
 
 
 async def send_notification(app: Application, text: str):
-    try:
-        await app.bot.send_message(
-            chat_id=int(OWNER_ID),
-            text=text,
-            parse_mode="HTML",
-            disable_web_page_preview=True,
-        )
-        await asyncio.sleep(SEND_DELAY)
-        return True
-
-    except RetryAfter as exc:
-        wait_time = exc.retry_after
-        if hasattr(wait_time, "total_seconds"):
-            wait_time = wait_time.total_seconds()
-
-        log.warning("Telegram rate limit. Waiting %s seconds", wait_time)
-        await asyncio.sleep(float(wait_time) + 1)
-
+    sent_to_all = True
+    for user_id in sorted(ALLOWED_USER_IDS):
         try:
             await app.bot.send_message(
-                chat_id=int(OWNER_ID),
+                chat_id=int(user_id),
                 text=text,
                 parse_mode="HTML",
                 disable_web_page_preview=True,
             )
             await asyncio.sleep(SEND_DELAY)
-            return True
-        except TelegramError as retry_exc:
+        except RetryAfter as exc:
+            wait_time = exc.retry_after
+            if hasattr(wait_time, "total_seconds"):
+                wait_time = wait_time.total_seconds()
+            log.warning("Telegram rate limit. Waiting %s seconds", wait_time)
+            await asyncio.sleep(float(wait_time) + 1)
+            try:
+                await app.bot.send_message(
+                    chat_id=int(user_id),
+                    text=text,
+                    parse_mode="HTML",
+                    disable_web_page_preview=True,
+                )
+                await asyncio.sleep(SEND_DELAY)
+            except TelegramError as retry_exc:
+                sent_to_all = False
+                log.warning(
+                    "Notification failed for user %s after retry: %s",
+                    user_id, type(retry_exc).__name__,
+                )
+        except TelegramError as exc:
+            sent_to_all = False
             log.warning(
-                "Notification failed after retry: %s",
-                type(retry_exc).__name__,
+                "Notification failed for user %s: %s",
+                user_id, type(exc).__name__,
             )
-            return False
-
-    except TelegramError as exc:
-        log.warning(
-            "Notification failed: %s",
-            type(exc).__name__,
-        )
-        return False
+    return sent_to_all
 
 
 async def scan_channels(app: Application):
     global user_client
-
     if user_client is None or not user_client.is_connected():
         raise RuntimeError("Telegram user session is not connected")
 
@@ -228,36 +210,26 @@ async def scan_channels(app: Application):
             checked += 1
 
             async for message in user_client.iter_messages(
-                entity,
-                limit=MAX_MESSAGES_PER_CHANNEL,
+                entity, limit=MAX_MESSAGES_PER_CHANNEL
             ):
                 body = (message.message or "").strip()
-
                 if not body:
                     continue
 
                 key = f"{entity.id}:{message.id}"
-
                 if was_seen(key):
                     continue
 
-                # Старые объявления не отправляем
                 if not is_recent(message):
                     mark_seen(key)
                     old += 1
                     continue
 
-                # Запоминаем сообщение, чтобы не проверять его повторно
-                mark_seen(key)
-
                 if not is_relevant(body):
+                    mark_seen(key)
                     continue
 
-                link = (
-                    f"https://t.me/"
-                    f"{channel.lstrip('@')}/{message.id}"
-                )
-
+                link = f"https://t.me/{channel.lstrip('@')}/{message.id}"
                 text = (
                     "🆕 <b>Возможный свежий заказ на дизайн карточек</b>\n\n"
                     f"{html.escape(body[:3500])}\n\n"
@@ -267,16 +239,15 @@ async def scan_channels(app: Application):
                 )
 
                 sent = await send_notification(app, text)
-
                 if sent:
                     found += 1
+                    mark_seen(key)
 
         except Exception as exc:
             errors += 1
             log.warning(
                 "Channel scan failed: %s (%s)",
-                channel,
-                type(exc).__name__,
+                channel, type(exc).__name__,
             )
 
     return {
@@ -288,33 +259,23 @@ async def scan_channels(app: Application):
     }
 
 
-async def start(
-    update: Update,
-    context: ContextTypes.DEFAULT_TYPE,
-):
+async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if not is_owner(update):
-        await reply(
-            update,
-            "Доступ закрыт. Проверь OWNER_TELEGRAM_ID.",
-        )
+        await reply(update, "Доступ закрыт.")
         return
-
     await reply(
         update,
-        "Привет! Я ищу свежие объявления о заказах "
-        "на дизайн карточек товаров.\n\n"
+        "Привет! Я ищу свежие объявления о заказах на дизайн карточек товаров.\n\n"
         f"Возраст объявлений: до {MAX_AGE_HOURS} ч.\n"
         f"Интервал проверки: {SCAN_MINUTES} мин.\n\n"
         "/status — состояние\n"
         "/scan — проверить каналы сейчас\n"
+        "/myid — узнать Telegram ID\n"
         "Поиск работает без нейросети.",
     )
 
 
-async def myid(
-    update: Update,
-    context: ContextTypes.DEFAULT_TYPE,
-):
+async def myid(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await reply(
         update,
         f"Твой Telegram ID: "
@@ -322,73 +283,48 @@ async def myid(
     )
 
 
-async def status(
-    update: Update,
-    context: ContextTypes.DEFAULT_TYPE,
-):
+async def status(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if not is_owner(update):
         await reply(update, "Доступ закрыт.")
         return
-
-    connected = (
-        user_client is not None
-        and user_client.is_connected()
-    )
-
+    connected = user_client is not None and user_client.is_connected()
     await reply(
         update,
         f"🟢 Бот запущен\n"
-        f"Telegram-аккаунт подключён: "
-        f"{'да' if connected else 'нет'}\n"
+        f"Telegram-аккаунт подключён: {'да' if connected else 'нет'}\n"
+        f"Пользователей: {len(ALLOWED_USER_IDS)}\n"
         f"Каналов в списке: {len(CHANNELS)}\n"
         f"Интервал проверки: {SCAN_MINUTES} мин.\n"
         f"Максимальный возраст заявки: {MAX_AGE_HOURS} ч.",
     )
 
 
-async def scan_command(
-    update: Update,
-    context: ContextTypes.DEFAULT_TYPE,
-):
+async def scan_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if not is_owner(update):
         await reply(update, "Доступ закрыт.")
         return
-
     if scan_lock.locked():
         await reply(update, "⏳ Проверка уже выполняется.")
         return
-
     await reply(update, "🔎 Проверяю Telegram-каналы…")
-
     result = await run_scan(context.application)
-
     if result is None:
-        await reply(
-            update,
-            "⚠️ Проверка не завершилась. "
-            "Посмотри журнал FadeHost.",
-        )
+        await reply(update, "⚠️ Проверка не завершилась. Посмотри журнал FadeHost.")
     else:
         await reply(
             update,
             "✅ Проверка завершена.\n"
-            f"Доступно каналов: "
-            f"{result['checked']} из {result['total']}\n"
+            f"Доступно каналов: {result['checked']} из {result['total']}\n"
             f"Ошибок: {result['errors']}\n"
-            f"Новых подходящих объявлений: "
-            f"{result['found']}\n"
-            f"Старых объявлений пропущено: "
-            f"{result['old']}",
+            f"Новых подходящих объявлений: {result['found']}\n"
+            f"Старых объявлений пропущено: {result['old']}",
         )
 
 
 async def run_scan(app: Application):
-    if not OWNER_ID:
-        log.warning(
-            "OWNER_TELEGRAM_ID is not set; notifications disabled"
-        )
+    if not ALLOWED_USER_IDS:
+        log.warning("No allowed Telegram user IDs are configured")
         return None
-
     async with scan_lock:
         try:
             return await scan_channels(app)
@@ -397,29 +333,20 @@ async def run_scan(app: Application):
             return None
 
 
-async def scheduled_scan(
-    context: ContextTypes.DEFAULT_TYPE,
-):
+async def scheduled_scan(context: ContextTypes.DEFAULT_TYPE):
     result = await run_scan(context.application)
-
     if result:
         log.info(
             "Scan complete: checked=%s/%s errors=%s found=%s old=%s",
-            result["checked"],
-            result["total"],
-            result["errors"],
-            result["found"],
-            result["old"],
+            result["checked"], result["total"], result["errors"],
+            result["found"], result["old"],
         )
 
 
 async def post_init(app: Application):
     global user_client
-
     if not all([TG_API_ID, TG_API_HASH, TELETHON_SESSION]):
-        log.warning(
-            "Telegram user session settings are incomplete"
-        )
+        log.warning("Telegram user session settings are incomplete")
         return
 
     user_client = TelegramClient(
@@ -427,20 +354,15 @@ async def post_init(app: Application):
         int(TG_API_ID),
         TG_API_HASH,
     )
-
     await user_client.connect()
-
     me = await user_client.get_me()
     log.info("Telegram session is_bot=%s", me.bot)
 
     if not await user_client.is_user_authorized():
-        raise RuntimeError(
-            "TELETHON_SESSION is not authorized"
-        )
+        raise RuntimeError("TELETHON_SESSION is not authorized")
 
     log.info("Telegram user session connected")
-
-    if OWNER_ID:
+    if ALLOWED_USER_IDS:
         app.job_queue.run_repeating(
             scheduled_scan,
             interval=SCAN_MINUTES * 60,
@@ -451,7 +373,6 @@ async def post_init(app: Application):
 
 async def post_shutdown(app: Application):
     global user_client
-
     if user_client is not None and user_client.is_connected():
         await user_client.disconnect()
 
@@ -459,12 +380,8 @@ async def post_shutdown(app: Application):
 def main():
     if not BOT_TOKEN:
         raise SystemExit("TELEGRAM_BOT_TOKEN is not set")
-
     if not OWNER_ID:
-        log.warning(
-            "OWNER_TELEGRAM_ID is not set; "
-            "notifications are disabled"
-        )
+        log.warning("OWNER_TELEGRAM_ID is not set")
 
     app = (
         Application.builder()
@@ -473,12 +390,10 @@ def main():
         .post_shutdown(post_shutdown)
         .build()
     )
-
     app.add_handler(CommandHandler("start", start))
     app.add_handler(CommandHandler("myid", myid))
     app.add_handler(CommandHandler("status", status))
     app.add_handler(CommandHandler("scan", scan_command))
-
     app.run_polling()
 
 
