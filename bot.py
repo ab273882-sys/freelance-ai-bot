@@ -131,6 +131,10 @@ def db():
         "link TEXT NOT NULL, created_at TEXT NOT NULL)"
     )
     con.execute(
+        "CREATE TABLE IF NOT EXISTS user_prefs "
+        "(user_id TEXT PRIMARY KEY, paused INTEGER NOT NULL DEFAULT 0, keyword TEXT NOT NULL DEFAULT '')"
+    )
+    con.execute(
         "CREATE TABLE IF NOT EXISTS decisions "
         "(user_id TEXT NOT NULL, job_key TEXT NOT NULL, decision TEXT NOT NULL, "
         "decided_at TEXT NOT NULL, PRIMARY KEY(user_id, job_key))"
@@ -281,6 +285,8 @@ async def scan_channels(app: Application):
 
     if found:
         for user_id in sorted(ALLOWED_USER_IDS):
+            if is_paused(user_id):
+                continue
             count = pending_count(user_id)
             if count:
                 try:
@@ -301,14 +307,45 @@ async def scan_channels(app: Application):
     }
 
 
-def pending_jobs(user_id: str):
+def get_pref(user_id: str):
     with db() as con:
-        return con.execute(
+        con.execute("INSERT OR IGNORE INTO user_prefs(user_id) VALUES (?)", (str(user_id),))
+        row = con.execute("SELECT paused, keyword FROM user_prefs WHERE user_id=?", (str(user_id),)).fetchone()
+        con.commit()
+    return bool(row[0]), row[1] or ""
+
+
+def is_paused(user_id: str) -> bool:
+    return get_pref(user_id)[0]
+
+
+def set_paused(user_id: str, paused: bool):
+    with db() as con:
+        con.execute("INSERT OR IGNORE INTO user_prefs(user_id) VALUES (?)", (str(user_id),))
+        con.execute("UPDATE user_prefs SET paused=? WHERE user_id=?", (int(paused), str(user_id)))
+        con.commit()
+
+
+def set_keyword(user_id: str, keyword: str):
+    with db() as con:
+        con.execute("INSERT OR IGNORE INTO user_prefs(user_id) VALUES (?)", (str(user_id),))
+        con.execute("UPDATE user_prefs SET keyword=? WHERE user_id=?", (keyword, str(user_id)))
+        con.commit()
+
+
+def pending_jobs(user_id: str):
+    _, keyword = get_pref(user_id)
+    with db() as con:
+        rows = con.execute(
             "SELECT j.key, j.body, j.channel, j.link FROM jobs j "
             "LEFT JOIN decisions d ON d.job_key=j.key AND d.user_id=? "
             "WHERE d.job_key IS NULL ORDER BY j.created_at DESC, j.key DESC",
             (str(user_id),),
         ).fetchall()
+    if keyword:
+        needle = keyword.casefold()
+        rows = [row for row in rows if needle in row[1].casefold()]
+    return rows
 
 
 def pending_count(user_id: str) -> int:
@@ -346,10 +383,11 @@ async def show_next(query, user_id: str):
         f"📣 Источник: {html.escape(channel)}\n"
         f'<a href="{html.escape(link, quote=True)}">Открыть оригинал</a>'
     )
-    keyboard = InlineKeyboardMarkup([[
-        InlineKeyboardButton("❌ Пропустить", callback_data=f"queue:skip:{key}"),
-        InlineKeyboardButton("✅ Оставить", callback_data=f"queue:keep:{key}"),
-    ]])
+    keyboard = InlineKeyboardMarkup([
+        [InlineKeyboardButton("❌ Пропустить", callback_data=f"queue:skip:{key}"),
+         InlineKeyboardButton("✅ Оставить", callback_data=f"queue:keep:{key}")],
+        [InlineKeyboardButton("⬅️ Назад", callback_data="queue:back")],
+    ])
     await query.edit_message_text(text, parse_mode="HTML", reply_markup=keyboard, disable_web_page_preview=True)
 
 
@@ -362,6 +400,17 @@ async def queue_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await query.answer()
     data = query.data or ""
     if data == "queue:open":
+        await show_next(query, user_id)
+        return
+    if data == "queue:back":
+        with db() as con:
+            row = con.execute(
+                "SELECT job_key FROM decisions WHERE user_id=? ORDER BY decided_at DESC LIMIT 1",
+                (user_id,),
+            ).fetchone()
+            if row:
+                con.execute("DELETE FROM decisions WHERE user_id=? AND job_key=?", (user_id, row[0]))
+                con.commit()
         await show_next(query, user_id)
         return
     parts = data.split(":", 2)
@@ -398,6 +447,56 @@ async def saved_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.effective_chat.send_message(text=text, parse_mode="HTML", disable_web_page_preview=True)
 
 
+async def stats_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    if not is_owner(update):
+        await reply(update, "Доступ закрыт.")
+        return
+    user_id = str(update.effective_user.id)
+    with db() as con:
+        total = con.execute("SELECT COUNT(*) FROM jobs").fetchone()[0]
+        kept = con.execute("SELECT COUNT(*) FROM decisions WHERE user_id=? AND decision='keep'", (user_id,)).fetchone()[0]
+        skipped = con.execute("SELECT COUNT(*) FROM decisions WHERE user_id=? AND decision='skip'", (user_id,)).fetchone()[0]
+    paused, keyword = get_pref(user_id)
+    await reply(update, f"📊 Твоя статистика\nВсего найдено: {total}\n⭐ Сохранено: {kept}\n❌ Пропущено: {skipped}\n⏳ Ожидают просмотра: {pending_count(user_id)}\nУведомления: {'пауза' if paused else 'включены'}\nФильтр: {html.escape(keyword) if keyword else 'не задан'}")
+
+
+async def pause_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    if not is_owner(update):
+        await reply(update, "Доступ закрыт.")
+        return
+    user_id = str(update.effective_user.id)
+    paused, _ = get_pref(user_id)
+    set_paused(user_id, not paused)
+    await reply(update, "⏸️ Уведомления приостановлены. Очередь доступна командой /queue." if not paused else "▶️ Уведомления снова включены.")
+
+
+async def filter_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    if not is_owner(update):
+        await reply(update, "Доступ закрыт.")
+        return
+    user_id = str(update.effective_user.id)
+    keyword = " ".join(context.args).strip()
+    if keyword.lower() == "clear":
+        keyword = ""
+    set_keyword(user_id, keyword)
+    await reply(update, (f"🔍 Фильтр установлен: {html.escape(keyword)}\nВ очереди: {pending_count(user_id)}" if keyword else "🔍 Фильтр очищен. Показываю все подходящие объявления."))
+
+
+async def queue_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    if not is_owner(update):
+        await reply(update, "Доступ закрыт.")
+        return
+    user_id = str(update.effective_user.id)
+    jobs = pending_jobs(user_id)
+    if not jobs:
+        await reply(update, "📭 Нет объявлений для просмотра. Попробуй /scan или очисти фильтр командой /filter clear.")
+        return
+    await update.effective_chat.send_message(
+        text=f"📋 Найдено для просмотра: {len(jobs)}\nНажми кнопку, чтобы начать.",
+        reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("👀 Смотреть заказы", callback_data="queue:open")]]),
+    )
+
+
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if not is_owner(update):
         await reply(update, "Доступ закрыт.")
@@ -410,6 +509,10 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
         "/status — состояние\n"
         "/scan — проверить каналы сейчас\n"
         "/saved — сохранённые заказы\n"
+        "/stats — статистика\n"
+        "/queue — открыть очередь\n"
+        "/pause — пауза/возобновление уведомлений\n"
+        "/filter слово — фильтр по словам; /filter clear — сброс\n"
         "/myid — узнать Telegram ID\n"
         "Поиск работает без нейросети.",
     )
@@ -535,6 +638,10 @@ def main():
     app.add_handler(CommandHandler("status", status))
     app.add_handler(CommandHandler("scan", scan_command))
     app.add_handler(CommandHandler("saved", saved_command))
+    app.add_handler(CommandHandler("stats", stats_command))
+    app.add_handler(CommandHandler("pause", pause_command))
+    app.add_handler(CommandHandler("filter", filter_command))
+    app.add_handler(CommandHandler("queue", queue_command))
     from telegram.ext import CallbackQueryHandler
     app.add_handler(CallbackQueryHandler(queue_callback, pattern=r"^queue:"))
     app.run_polling()
