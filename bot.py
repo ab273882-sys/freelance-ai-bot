@@ -343,12 +343,15 @@ async def post_init(app: Application):
         TG_API_HASH,
     )
 
-    await user_client.connect()
+await user_client.connect()
 
     if not await user_client.is_user_authorized():
         raise RuntimeError(
             "TELETHON_SESSION is not authorized"
         )
+
+    me = await user_client.get_me()
+    log.info("Telegram session is_bot=%s", me.bot)
 
     log.info("Telegram user session connected")
 
