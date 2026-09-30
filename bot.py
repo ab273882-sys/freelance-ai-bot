@@ -52,6 +52,10 @@ CHANNELS = [
     "@designers_wb_ozon",
     "@dizainerplace",
     "@infografikamptop",
+    "@dizainery_wildberries_ozon",
+    "@wb_ozon_designers",
+    "@dizainer_wb",
+    "@Designs_job",
 ]
 
 POSITIVE = [
