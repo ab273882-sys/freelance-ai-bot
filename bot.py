@@ -9,7 +9,7 @@ from datetime import datetime, timezone, timedelta
 from dotenv import load_dotenv
 from telethon import TelegramClient
 from telethon.sessions import StringSession
-from telegram import Update
+from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.error import RetryAfter, TelegramError
 from telegram.ext import Application, CommandHandler, ContextTypes
 
@@ -124,6 +124,16 @@ def db():
     con.execute(
         "CREATE TABLE IF NOT EXISTS seen "
         "(key TEXT PRIMARY KEY, seen_at TEXT NOT NULL)"
+    )
+    con.execute(
+        "CREATE TABLE IF NOT EXISTS jobs "
+        "(key TEXT PRIMARY KEY, body TEXT NOT NULL, channel TEXT NOT NULL, "
+        "link TEXT NOT NULL, created_at TEXT NOT NULL)"
+    )
+    con.execute(
+        "CREATE TABLE IF NOT EXISTS decisions "
+        "(user_id TEXT NOT NULL, job_key TEXT NOT NULL, decision TEXT NOT NULL, "
+        "decided_at TEXT NOT NULL, PRIMARY KEY(user_id, job_key))"
     )
     con.commit()
     return con
@@ -252,18 +262,15 @@ async def scan_channels(app: Application):
                     continue
 
                 link = f"https://t.me/{channel.lstrip('@')}/{message.id}"
-                text = (
-                    "🆕 <b>Возможный свежий заказ на дизайн карточек</b>\n\n"
-                    f"{html.escape(body[:3500])}\n\n"
-                    f"📣 Источник: {html.escape(channel)}\n"
-                    f'<a href="{html.escape(link, quote=True)}">'
-                    "Открыть сообщение</a>"
-                )
-
-                sent = await send_notification(app, text)
-                if sent:
-                    found += 1
-                    mark_seen(key)
+                with db() as con:
+                    con.execute(
+                        "INSERT OR IGNORE INTO jobs(key, body, channel, link, created_at) "
+                        "VALUES (?, ?, ?, ?, ?)",
+                        (key, body[:3500], channel, link, message.date.isoformat()),
+                    )
+                    con.commit()
+                found += 1
+                mark_seen(key)
 
         except Exception as exc:
             errors += 1
@@ -272,6 +279,19 @@ async def scan_channels(app: Application):
                 channel, type(exc).__name__,
             )
 
+    if found:
+        for user_id in sorted(ALLOWED_USER_IDS):
+            count = pending_count(user_id)
+            if count:
+                try:
+                    await app.bot.send_message(
+                        chat_id=int(user_id),
+                        text=f"🆕 Найдено новых заказов: {found}\n📋 У тебя ожидают просмотра: {count}",
+                        reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("👀 Смотреть заказы", callback_data="queue:open")]]),
+                    )
+                except TelegramError as exc:
+                    log.warning("Queue notice failed for %s: %s", user_id, type(exc).__name__)
+
     return {
         "checked": checked,
         "errors": errors,
@@ -279,6 +299,103 @@ async def scan_channels(app: Application):
         "old": old,
         "total": len(CHANNELS),
     }
+
+
+def pending_jobs(user_id: str):
+    with db() as con:
+        return con.execute(
+            "SELECT j.key, j.body, j.channel, j.link FROM jobs j "
+            "LEFT JOIN decisions d ON d.job_key=j.key AND d.user_id=? "
+            "WHERE d.job_key IS NULL ORDER BY j.created_at DESC, j.key DESC",
+            (str(user_id),),
+        ).fetchall()
+
+
+def pending_count(user_id: str) -> int:
+    return len(pending_jobs(user_id))
+
+
+def saved_count(user_id: str) -> int:
+    with db() as con:
+        return con.execute(
+            "SELECT COUNT(*) FROM decisions WHERE user_id=? AND decision='keep'",
+            (str(user_id),),
+        ).fetchone()[0]
+
+
+async def show_next(query, user_id: str):
+    jobs = pending_jobs(user_id)
+    if not jobs:
+        await query.edit_message_text(
+            f"🎉 Все объявления просмотрены!\n⭐ Сохранено: {saved_count(user_id)}",
+            reply_markup=None,
+        )
+        return
+    key, body, channel, link = jobs[0]
+    total = len(jobs)
+    # Номер текущего объявления относительно уже просмотренных в этой очереди.
+    with db() as con:
+        reviewed = con.execute(
+            "SELECT COUNT(*) FROM decisions WHERE user_id=?", (str(user_id),)
+        ).fetchone()[0]
+    number = reviewed + 1
+    text = (
+        f"📋 <b>Заказ {number} из {number + total - 1}</b>\n"
+        f"⭐ Сохранено: {saved_count(user_id)}\n\n"
+        f"{html.escape(body)}\n\n"
+        f"📣 Источник: {html.escape(channel)}\n"
+        f'<a href="{html.escape(link, quote=True)}">Открыть оригинал</a>'
+    )
+    keyboard = InlineKeyboardMarkup([[
+        InlineKeyboardButton("❌ Пропустить", callback_data=f"queue:skip:{key}"),
+        InlineKeyboardButton("✅ Оставить", callback_data=f"queue:keep:{key}"),
+    ]])
+    await query.edit_message_text(text, parse_mode="HTML", reply_markup=keyboard, disable_web_page_preview=True)
+
+
+async def queue_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    query = update.callback_query
+    user_id = str(query.from_user.id)
+    if user_id not in ALLOWED_USER_IDS:
+        await query.answer("Доступ закрыт.", show_alert=True)
+        return
+    await query.answer()
+    data = query.data or ""
+    if data == "queue:open":
+        await show_next(query, user_id)
+        return
+    parts = data.split(":", 2)
+    if len(parts) == 3 and parts[1] in ("skip", "keep"):
+        decision = "keep" if parts[1] == "keep" else "skip"
+        with db() as con:
+            con.execute(
+                "INSERT OR IGNORE INTO decisions(user_id, job_key, decision, decided_at) "
+                "VALUES (?, ?, ?, ?)",
+                (user_id, parts[2], decision, datetime.now(timezone.utc).isoformat()),
+            )
+            con.commit()
+        await show_next(query, user_id)
+
+
+async def saved_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    if not is_owner(update):
+        await reply(update, "Доступ закрыт.")
+        return
+    user_id = str(update.effective_user.id)
+    with db() as con:
+        rows = con.execute(
+            "SELECT j.body, j.link FROM jobs j JOIN decisions d ON d.job_key=j.key "
+            "WHERE d.user_id=? AND d.decision='keep' ORDER BY d.decided_at DESC LIMIT 20",
+            (user_id,),
+        ).fetchall()
+    if not rows:
+        await reply(update, "⭐ Пока нет сохранённых заказов.")
+        return
+    text = "⭐ <b>Сохранённые заказы</b>\n\n" + "\n\n".join(
+        f"{i}. {html.escape(body[:700])}\n<a href=\"{html.escape(link, quote=True)}\">Открыть оригинал</a>"
+        for i, (body, link) in enumerate(rows, 1)
+    )
+    await update.effective_chat.send_message(text=text, parse_mode="HTML", disable_web_page_preview=True)
 
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -292,6 +409,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
         f"Интервал проверки: {SCAN_MINUTES} мин.\n\n"
         "/status — состояние\n"
         "/scan — проверить каналы сейчас\n"
+        "/saved — сохранённые заказы\n"
         "/myid — узнать Telegram ID\n"
         "Поиск работает без нейросети.",
     )
@@ -416,6 +534,9 @@ def main():
     app.add_handler(CommandHandler("myid", myid))
     app.add_handler(CommandHandler("status", status))
     app.add_handler(CommandHandler("scan", scan_command))
+    app.add_handler(CommandHandler("saved", saved_command))
+    from telegram.ext import CallbackQueryHandler
+    app.add_handler(CallbackQueryHandler(queue_callback, pattern=r"^queue:"))
     app.run_polling()
 
 
