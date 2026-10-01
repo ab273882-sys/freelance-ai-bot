@@ -4,6 +4,9 @@ import logging
 import os
 import re
 import sqlite3
+import json
+import urllib.parse
+import urllib.request
 from datetime import datetime, timezone, timedelta
 
 from dotenv import load_dotenv
@@ -77,6 +80,9 @@ CHANNELS = [
     '@udafrii',
     '@FreeWorkFeed',
     '@workk_on',
+    # Зарубежные каналы (английский/испанский)
+    '@remotegraphicdesignjobs',
+    '@findmyremote_design',
 ]
 # Строгий фильтр: пропускаем только явный поиск исполнителя/дизайнера.
 # Общие слова вроде «инфографика», «WB» и «карточки» сами по себе не подходят.
@@ -409,9 +415,24 @@ async def show_next(query, user_id: str):
     keyboard = InlineKeyboardMarkup([
         [InlineKeyboardButton("❌ Пропустить", callback_data=f"queue:skip:{key}"),
          InlineKeyboardButton("✅ Оставить", callback_data=f"queue:keep:{key}")],
+        [InlineKeyboardButton("🇷🇺 Перевести", callback_data=f"queue:translate:{key}")],
         [InlineKeyboardButton("⬅️ Назад", callback_data="queue:back")],
     ])
     await query.edit_message_text(text, parse_mode="HTML", reply_markup=keyboard, disable_web_page_preview=True)
+
+
+def translate_to_russian(text: str) -> str:
+    """Переводит текст через публичный Google Translate endpoint."""
+    params = urllib.parse.urlencode({
+        "client": "gtx", "sl": "auto", "tl": "ru", "dt": "t", "q": text[:4000]
+    })
+    request = urllib.request.Request(
+        "https://translate.googleapis.com/translate_a/single?" + params,
+        headers={"User-Agent": "Mozilla/5.0"},
+    )
+    with urllib.request.urlopen(request, timeout=20) as response:
+        data = json.loads(response.read().decode("utf-8"))
+    return "".join(part[0] for part in data[0] if part and part[0])
 
 
 async def queue_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -422,6 +443,28 @@ async def queue_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
         return
     await query.answer()
     data = query.data or ""
+    if data.startswith("queue:translate:"):
+        key = data.split(":", 2)[2]
+        with db() as con:
+            row = con.execute("SELECT body FROM jobs WHERE key=?", (key,)).fetchone()
+        if not row:
+            await query.answer("Объявление не найдено.", show_alert=True)
+            return
+        await query.answer("Перевожу…")
+        try:
+            translated = await asyncio.to_thread(translate_to_russian, row[0])
+            # Ограничение Telegram на длину сообщения; кнопки остаются доступными.
+            translated = translated[:3500]
+            await query.message.reply_text(
+                "🇷🇺 <b>Перевод на русский</b>\\n\\n" + html.escape(translated),
+                parse_mode="HTML", disable_web_page_preview=True,
+            )
+        except Exception as exc:
+            log.warning("Translation failed: %s", type(exc).__name__)
+            await query.message.reply_text(
+                "⚠️ Не удалось перевести. Попробуй позже."
+            )
+        return
     if data == "queue:open":
         await show_next(query, user_id)
         return
