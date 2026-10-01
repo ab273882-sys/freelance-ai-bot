@@ -83,6 +83,11 @@ CHANNELS = [
     # Зарубежные каналы (английский/испанский)
     '@remotegraphicdesignjobs',
     '@findmyremote_design',
+    '@remotegraphicdesignjobs',
+    '@findmyremote_design',
+    '@noicejobschannel',
+    '@remotejobswork',
+    '@all_remote_jobs',
 ]
 # Строгий фильтр: пропускаем только явный поиск исполнителя/дизайнера.
 # Общие слова вроде «инфографика», «WB» и «карточки» сами по себе не подходят.
