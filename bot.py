@@ -96,6 +96,10 @@ CHANNELS = [
     '@ux_ui_graph_designers_job',
     '@uiux_jobs_resumes',
     '@dprofilejob',
+    '@zakazi_designers',
+    '@dizayner_vakansiii',
+    '@designvacancy',
+    '@TGwork',
 
     # Общий фриланс и удалённая работа
     '@itfreelance',
