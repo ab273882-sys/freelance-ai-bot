@@ -80,14 +80,39 @@ CHANNELS = [
     '@udafrii',
     '@FreeWorkFeed',
     '@workk_on',
-    # Зарубежные каналы (английский/испанский)
-    '@remotegraphicdesignjobs',
-    '@findmyremote_design',
+
+    # Зарубежные каналы
     '@remotegraphicdesignjobs',
     '@findmyremote_design',
     '@noicejobschannel',
     '@remotejobswork',
     '@all_remote_jobs',
+
+    # Дополнительные каналы для дизайнеров
+    '@designbirzha',
+    '@design_jobs_uxui',
+    '@jun_hi_vacancies',
+    '@uxwork',
+    '@ux_ui_graph_designers_job',
+    '@uiux_jobs_resumes',
+    '@dprofilejob',
+
+    # Общий фриланс и удалённая работа
+    '@itfreelance',
+    '@Freelance_Jobs_online',
+    '@polyaluzjob',
+    '@uvetrovoi',
+
+    # Смежные дизайнерские ниши
+    '@dsgn_box',
+    '@figmaweb',
+    '@behancerdsgn',
+    '@behancedsgn',
+    '@psd_eu',
+    '@dsgn_tutorial',
+    '@cyrillicdesign',
+    '@desgangchat',
+    '@holder_job_marketing',
 ]
 # Строгий фильтр: пропускаем только явный поиск исполнителя/дизайнера.
 # Общие слова вроде «инфографика», «WB» и «карточки» сами по себе не подходят.
