@@ -36,8 +36,8 @@ MAX_MESSAGES_PER_CHANNEL = max(
 MAX_AGE_HOURS = max(1, int(os.getenv("MAX_AGE_HOURS", "24")))
 SEND_DELAY = max(1, int(os.getenv("SEND_DELAY", "2")))
 
-# Зарубежные сайты с публичными API. Проверяются отдельно от Telegram.
-# Интервал 6 часов: Remotive рекомендует не более 4 запросов в сутки.
+# ÐÐ°ÑÑÐ±ÐµÐ¶Ð½ÑÐµ ÑÐ°Ð¹ÑÑ Ñ Ð¿ÑÐ±Ð»Ð¸ÑÐ½ÑÐ¼Ð¸ API. ÐÑÐ¾Ð²ÐµÑÑÑÑÑÑ Ð¾ÑÐ´ÐµÐ»ÑÐ½Ð¾ Ð¾Ñ Telegram.
+# ÐÐ½ÑÐµÑÐ²Ð°Ð» 6 ÑÐ°ÑÐ¾Ð²: Remotive ÑÐµÐºÐ¾Ð¼ÐµÐ½Ð´ÑÐµÑ Ð½Ðµ Ð±Ð¾Ð»ÐµÐµ 4 Ð·Ð°Ð¿ÑÐ¾ÑÐ¾Ð² Ð² ÑÑÑÐºÐ¸.
 WEB_SCAN_HOURS = max(6, int(os.getenv("WEB_SCAN_HOURS", "6")))
 WEB_MAX_AGE_HOURS = max(1, int(os.getenv("WEB_MAX_AGE_HOURS", "72")))
 
@@ -46,14 +46,14 @@ WEB_SOURCES = {
     "Himalayas": "https://himalayas.app/jobs/api?limit=20",
     "Remotive": "https://remotive.com/api/remote-jobs?limit=100",
     "Jobicy": "https://jobicy.com/api/v2/remote-jobs?count=50",
-    # Дополнительные открытые ленты удалённых вакансий
+    # ÐÐ¾Ð¿Ð¾Ð»Ð½Ð¸ÑÐµÐ»ÑÐ½ÑÐµ Ð¾ÑÐºÑÑÑÑÐµ Ð»ÐµÐ½ÑÑ ÑÐ´Ð°Ð»ÑÐ½Ð½ÑÑ Ð²Ð°ÐºÐ°Ð½ÑÐ¸Ð¹
     "RemoteJobs.org": "https://remotejobs.org/api/v1/jobs?limit=50",
     "Career Nest": "https://careernest.cloud/api/feed?limit=100",
     "Arbeitnow": "https://www.arbeitnow.com/api/job-board-api",
     "Remote First Jobs": "https://remotefirstjobs.com/api/search-jobs",
 }
 
-# Целевые направления: анимация логотипов, карточки товаров и любые AI-роли.
+# Ð¦ÐµÐ»ÐµÐ²ÑÐµ Ð½Ð°Ð¿ÑÐ°Ð²Ð»ÐµÐ½Ð¸Ñ: Ð°Ð½Ð¸Ð¼Ð°ÑÐ¸Ñ Ð»Ð¾Ð³Ð¾ÑÐ¸Ð¿Ð¾Ð², ÐºÐ°ÑÑÐ¾ÑÐºÐ¸ ÑÐ¾Ð²Ð°ÑÐ¾Ð² Ð¸ Ð»ÑÐ±ÑÐµ AI-ÑÐ¾Ð»Ð¸.
 WEB_KEYWORDS = [
     "logo animation", "animated logo", "animate logo", "motion graphics",
     "motion designer", "logo animator", "brand animation",
@@ -111,56 +111,56 @@ CHANNELS = [
     '@udafrii',
     '@FreeWorkFeed',
     '@workk_on',
-    # Зарубежные каналы (английский/испанский)
+    # ÐÐ°ÑÑÐ±ÐµÐ¶Ð½ÑÐµ ÐºÐ°Ð½Ð°Ð»Ñ (Ð°Ð½Ð³Ð»Ð¸Ð¹ÑÐºÐ¸Ð¹/Ð¸ÑÐ¿Ð°Ð½ÑÐºÐ¸Ð¹)
     '@remotegraphicdesignjobs',
     '@findmyremote_design',
 ]
-# Строгий фильтр: пропускаем только явный поиск исполнителя/дизайнера.
-# Общие слова вроде «инфографика», «WB» и «карточки» сами по себе не подходят.
+# Ð¡ÑÑÐ¾Ð³Ð¸Ð¹ ÑÐ¸Ð»ÑÑÑ: Ð¿ÑÐ¾Ð¿ÑÑÐºÐ°ÐµÐ¼ ÑÐ¾Ð»ÑÐºÐ¾ ÑÐ²Ð½ÑÐ¹ Ð¿Ð¾Ð¸ÑÐº Ð¸ÑÐ¿Ð¾Ð»Ð½Ð¸ÑÐµÐ»Ñ/Ð´Ð¸Ð·Ð°Ð¹Ð½ÐµÑÐ°.
+# ÐÐ±ÑÐ¸Ðµ ÑÐ»Ð¾Ð²Ð° Ð²ÑÐ¾Ð´Ðµ Â«Ð¸Ð½ÑÐ¾Ð³ÑÐ°ÑÐ¸ÐºÐ°Â», Â«WBÂ» Ð¸ Â«ÐºÐ°ÑÑÐ¾ÑÐºÐ¸Â» ÑÐ°Ð¼Ð¸ Ð¿Ð¾ ÑÐµÐ±Ðµ Ð½Ðµ Ð¿Ð¾Ð´ÑÐ¾Ð´ÑÑ.
 POSITIVE = [
-    "ищу дизайнера",
-    "ищем дизайнера",
-    "нужен дизайнер",
-    "нужна дизайнер",
-    "нужен дизайнер карточек",
-    "требуется дизайнер",
-    "требуется дизайнер карточек",
-    "ищу дизайнера карточек",
-    "ищем дизайнера карточек",
-    "ищу инфографиста",
-    "ищем инфографиста",
-    "нужен инфографист",
-    "нужна инфографист",
-    "требуется инфографист",
-    "ищу исполнителя",
-    "ищем исполнителя",
-    "нужен исполнитель",
-    "нужна исполнитель",
-    "требуется исполнитель",
-    "ищу специалиста по дизайну",
-    "ищем специалиста по дизайну",
-    "нужен специалист по дизайну",
-    "нужен дизайнер для",
-    "нужна дизайнер для",
-    "заказ на дизайн",
-    "есть заказ на дизайн",
-    "ищу человека для дизайна",
-    # Логотипы, баннеры и фирменный стиль (русский)
-    "ищу дизайнера логотипа",
-    "ищем дизайнера логотипа",
-    "нужен дизайнер логотипа",
-    "нужен дизайнер для логотипа",
-    "заказать логотип",
-    "заказ на логотип",
-    "ищу дизайнера баннеров",
-    "ищем дизайнера баннеров",
-    "нужен дизайнер баннеров",
-    "нужен дизайнер для баннера",
-    "заказать баннер",
-    "заказ на баннер",
-    "ищу дизайнера фирменного стиля",
-    "нужен дизайнер фирменного стиля",
-    # Английские формулировки заказов в зарубежных каналах
+    "Ð¸ÑÑ Ð´Ð¸Ð·Ð°Ð¹Ð½ÐµÑÐ°",
+    "Ð¸ÑÐµÐ¼ Ð´Ð¸Ð·Ð°Ð¹Ð½ÐµÑÐ°",
+    "Ð½ÑÐ¶ÐµÐ½ Ð´Ð¸Ð·Ð°Ð¹Ð½ÐµÑ",
+    "Ð½ÑÐ¶Ð½Ð° Ð´Ð¸Ð·Ð°Ð¹Ð½ÐµÑ",
+    "Ð½ÑÐ¶ÐµÐ½ Ð´Ð¸Ð·Ð°Ð¹Ð½ÐµÑ ÐºÐ°ÑÑÐ¾ÑÐµÐº",
+    "ÑÑÐµÐ±ÑÐµÑÑÑ Ð´Ð¸Ð·Ð°Ð¹Ð½ÐµÑ",
+    "ÑÑÐµÐ±ÑÐµÑÑÑ Ð´Ð¸Ð·Ð°Ð¹Ð½ÐµÑ ÐºÐ°ÑÑÐ¾ÑÐµÐº",
+    "Ð¸ÑÑ Ð´Ð¸Ð·Ð°Ð¹Ð½ÐµÑÐ° ÐºÐ°ÑÑÐ¾ÑÐµÐº",
+    "Ð¸ÑÐµÐ¼ Ð´Ð¸Ð·Ð°Ð¹Ð½ÐµÑÐ° ÐºÐ°ÑÑÐ¾ÑÐµÐº",
+    "Ð¸ÑÑ Ð¸Ð½ÑÐ¾Ð³ÑÐ°ÑÐ¸ÑÑÐ°",
+    "Ð¸ÑÐµÐ¼ Ð¸Ð½ÑÐ¾Ð³ÑÐ°ÑÐ¸ÑÑÐ°",
+    "Ð½ÑÐ¶ÐµÐ½ Ð¸Ð½ÑÐ¾Ð³ÑÐ°ÑÐ¸ÑÑ",
+    "Ð½ÑÐ¶Ð½Ð° Ð¸Ð½ÑÐ¾Ð³ÑÐ°ÑÐ¸ÑÑ",
+    "ÑÑÐµÐ±ÑÐµÑÑÑ Ð¸Ð½ÑÐ¾Ð³ÑÐ°ÑÐ¸ÑÑ",
+    "Ð¸ÑÑ Ð¸ÑÐ¿Ð¾Ð»Ð½Ð¸ÑÐµÐ»Ñ",
+    "Ð¸ÑÐµÐ¼ Ð¸ÑÐ¿Ð¾Ð»Ð½Ð¸ÑÐµÐ»Ñ",
+    "Ð½ÑÐ¶ÐµÐ½ Ð¸ÑÐ¿Ð¾Ð»Ð½Ð¸ÑÐµÐ»Ñ",
+    "Ð½ÑÐ¶Ð½Ð° Ð¸ÑÐ¿Ð¾Ð»Ð½Ð¸ÑÐµÐ»Ñ",
+    "ÑÑÐµÐ±ÑÐµÑÑÑ Ð¸ÑÐ¿Ð¾Ð»Ð½Ð¸ÑÐµÐ»Ñ",
+    "Ð¸ÑÑ ÑÐ¿ÐµÑÐ¸Ð°Ð»Ð¸ÑÑÐ° Ð¿Ð¾ Ð´Ð¸Ð·Ð°Ð¹Ð½Ñ",
+    "Ð¸ÑÐµÐ¼ ÑÐ¿ÐµÑÐ¸Ð°Ð»Ð¸ÑÑÐ° Ð¿Ð¾ Ð´Ð¸Ð·Ð°Ð¹Ð½Ñ",
+    "Ð½ÑÐ¶ÐµÐ½ ÑÐ¿ÐµÑÐ¸Ð°Ð»Ð¸ÑÑ Ð¿Ð¾ Ð´Ð¸Ð·Ð°Ð¹Ð½Ñ",
+    "Ð½ÑÐ¶ÐµÐ½ Ð´Ð¸Ð·Ð°Ð¹Ð½ÐµÑ Ð´Ð»Ñ",
+    "Ð½ÑÐ¶Ð½Ð° Ð´Ð¸Ð·Ð°Ð¹Ð½ÐµÑ Ð´Ð»Ñ",
+    "Ð·Ð°ÐºÐ°Ð· Ð½Ð° Ð´Ð¸Ð·Ð°Ð¹Ð½",
+    "ÐµÑÑÑ Ð·Ð°ÐºÐ°Ð· Ð½Ð° Ð´Ð¸Ð·Ð°Ð¹Ð½",
+    "Ð¸ÑÑ ÑÐµÐ»Ð¾Ð²ÐµÐºÐ° Ð´Ð»Ñ Ð´Ð¸Ð·Ð°Ð¹Ð½Ð°",
+    # ÐÐ¾Ð³Ð¾ÑÐ¸Ð¿Ñ, Ð±Ð°Ð½Ð½ÐµÑÑ Ð¸ ÑÐ¸ÑÐ¼ÐµÐ½Ð½ÑÐ¹ ÑÑÐ¸Ð»Ñ (ÑÑÑÑÐºÐ¸Ð¹)
+    "Ð¸ÑÑ Ð´Ð¸Ð·Ð°Ð¹Ð½ÐµÑÐ° Ð»Ð¾Ð³Ð¾ÑÐ¸Ð¿Ð°",
+    "Ð¸ÑÐµÐ¼ Ð´Ð¸Ð·Ð°Ð¹Ð½ÐµÑÐ° Ð»Ð¾Ð³Ð¾ÑÐ¸Ð¿Ð°",
+    "Ð½ÑÐ¶ÐµÐ½ Ð´Ð¸Ð·Ð°Ð¹Ð½ÐµÑ Ð»Ð¾Ð³Ð¾ÑÐ¸Ð¿Ð°",
+    "Ð½ÑÐ¶ÐµÐ½ Ð´Ð¸Ð·Ð°Ð¹Ð½ÐµÑ Ð´Ð»Ñ Ð»Ð¾Ð³Ð¾ÑÐ¸Ð¿Ð°",
+    "Ð·Ð°ÐºÐ°Ð·Ð°ÑÑ Ð»Ð¾Ð³Ð¾ÑÐ¸Ð¿",
+    "Ð·Ð°ÐºÐ°Ð· Ð½Ð° Ð»Ð¾Ð³Ð¾ÑÐ¸Ð¿",
+    "Ð¸ÑÑ Ð´Ð¸Ð·Ð°Ð¹Ð½ÐµÑÐ° Ð±Ð°Ð½Ð½ÐµÑÐ¾Ð²",
+    "Ð¸ÑÐµÐ¼ Ð´Ð¸Ð·Ð°Ð¹Ð½ÐµÑÐ° Ð±Ð°Ð½Ð½ÐµÑÐ¾Ð²",
+    "Ð½ÑÐ¶ÐµÐ½ Ð´Ð¸Ð·Ð°Ð¹Ð½ÐµÑ Ð±Ð°Ð½Ð½ÐµÑÐ¾Ð²",
+    "Ð½ÑÐ¶ÐµÐ½ Ð´Ð¸Ð·Ð°Ð¹Ð½ÐµÑ Ð´Ð»Ñ Ð±Ð°Ð½Ð½ÐµÑÐ°",
+    "Ð·Ð°ÐºÐ°Ð·Ð°ÑÑ Ð±Ð°Ð½Ð½ÐµÑ",
+    "Ð·Ð°ÐºÐ°Ð· Ð½Ð° Ð±Ð°Ð½Ð½ÐµÑ",
+    "Ð¸ÑÑ Ð´Ð¸Ð·Ð°Ð¹Ð½ÐµÑÐ° ÑÐ¸ÑÐ¼ÐµÐ½Ð½Ð¾Ð³Ð¾ ÑÑÐ¸Ð»Ñ",
+    "Ð½ÑÐ¶ÐµÐ½ Ð´Ð¸Ð·Ð°Ð¹Ð½ÐµÑ ÑÐ¸ÑÐ¼ÐµÐ½Ð½Ð¾Ð³Ð¾ ÑÑÐ¸Ð»Ñ",
+    # ÐÐ½Ð³Ð»Ð¸Ð¹ÑÐºÐ¸Ðµ ÑÐ¾ÑÐ¼ÑÐ»Ð¸ÑÐ¾Ð²ÐºÐ¸ Ð·Ð°ÐºÐ°Ð·Ð¾Ð² Ð² Ð·Ð°ÑÑÐ±ÐµÐ¶Ð½ÑÑ ÐºÐ°Ð½Ð°Ð»Ð°Ñ
     "looking for a designer",
     "looking for graphic designer",
     "looking for a graphic designer",
@@ -183,26 +183,26 @@ POSITIVE = [
 ]
 
 NEGATIVE = [
-    "предлагаю услуги",
-    "оказываю услуги",
-    "мои услуги",
-    "услуги дизайнера",
-    "я дизайнер",
-    "дизайнер на связи",
-    "ищу работу",
-    "ищу заказы",
-    "ищу заказчиков",
-    "ищу клиентов",
-    "ищу проекты",
-    "возьму заказ",
-    "возьму заказы",
-    "свободен для заказов",
-    "свободна для заказов",
-    "портфолио",
-    "обучение",
-    "курс",
-    "вебинар",
-    # Англоязычная самореклама и поиск заказов самим исполнителем
+    "Ð¿ÑÐµÐ´Ð»Ð°Ð³Ð°Ñ ÑÑÐ»ÑÐ³Ð¸",
+    "Ð¾ÐºÐ°Ð·ÑÐ²Ð°Ñ ÑÑÐ»ÑÐ³Ð¸",
+    "Ð¼Ð¾Ð¸ ÑÑÐ»ÑÐ³Ð¸",
+    "ÑÑÐ»ÑÐ³Ð¸ Ð´Ð¸Ð·Ð°Ð¹Ð½ÐµÑÐ°",
+    "Ñ Ð´Ð¸Ð·Ð°Ð¹Ð½ÐµÑ",
+    "Ð´Ð¸Ð·Ð°Ð¹Ð½ÐµÑ Ð½Ð° ÑÐ²ÑÐ·Ð¸",
+    "Ð¸ÑÑ ÑÐ°Ð±Ð¾ÑÑ",
+    "Ð¸ÑÑ Ð·Ð°ÐºÐ°Ð·Ñ",
+    "Ð¸ÑÑ Ð·Ð°ÐºÐ°Ð·ÑÐ¸ÐºÐ¾Ð²",
+    "Ð¸ÑÑ ÐºÐ»Ð¸ÐµÐ½ÑÐ¾Ð²",
+    "Ð¸ÑÑ Ð¿ÑÐ¾ÐµÐºÑÑ",
+    "Ð²Ð¾Ð·ÑÐ¼Ñ Ð·Ð°ÐºÐ°Ð·",
+    "Ð²Ð¾Ð·ÑÐ¼Ñ Ð·Ð°ÐºÐ°Ð·Ñ",
+    "ÑÐ²Ð¾Ð±Ð¾Ð´ÐµÐ½ Ð´Ð»Ñ Ð·Ð°ÐºÐ°Ð·Ð¾Ð²",
+    "ÑÐ²Ð¾Ð±Ð¾Ð´Ð½Ð° Ð´Ð»Ñ Ð·Ð°ÐºÐ°Ð·Ð¾Ð²",
+    "Ð¿Ð¾ÑÑÑÐ¾Ð»Ð¸Ð¾",
+    "Ð¾Ð±ÑÑÐµÐ½Ð¸Ðµ",
+    "ÐºÑÑÑ",
+    "Ð²ÐµÐ±Ð¸Ð½Ð°Ñ",
+    # ÐÐ½Ð³Ð»Ð¾ÑÐ·ÑÑÐ½Ð°Ñ ÑÐ°Ð¼Ð¾ÑÐµÐºÐ»Ð°Ð¼Ð° Ð¸ Ð¿Ð¾Ð¸ÑÐº Ð·Ð°ÐºÐ°Ð·Ð¾Ð² ÑÐ°Ð¼Ð¸Ð¼ Ð¸ÑÐ¿Ð¾Ð»Ð½Ð¸ÑÐµÐ»ÐµÐ¼
     "i am a designer",
     "i'm a designer",
     "my portfolio",
@@ -264,11 +264,11 @@ async def reply(update: Update, text: str):
 
 
 def is_relevant(text: str) -> bool:
-    normalized = re.sub(r"\s+", " ", text.lower().replace("ё", "е"))
-    # Сначала отсекаем саморекламу и предложения услуг.
+    normalized = re.sub(r"\s+", " ", text.lower().replace("Ñ", "Ðµ"))
+    # Ð¡Ð½Ð°ÑÐ°Ð»Ð° Ð¾ÑÑÐµÐºÐ°ÐµÐ¼ ÑÐ°Ð¼Ð¾ÑÐµÐºÐ»Ð°Ð¼Ñ Ð¸ Ð¿ÑÐµÐ´Ð»Ð¾Ð¶ÐµÐ½Ð¸Ñ ÑÑÐ»ÑÐ³.
     if any(word in normalized for word in NEGATIVE):
         return False
-    # Требуем явную формулировку, что автор ищет исполнителя.
+    # Ð¢ÑÐµÐ±ÑÐµÐ¼ ÑÐ²Ð½ÑÑ ÑÐ¾ÑÐ¼ÑÐ»Ð¸ÑÐ¾Ð²ÐºÑ, ÑÑÐ¾ Ð°Ð²ÑÐ¾Ñ Ð¸ÑÐµÑ Ð¸ÑÐ¿Ð¾Ð»Ð½Ð¸ÑÐµÐ»Ñ.
     return any(word in normalized for word in POSITIVE)
 
 
@@ -397,8 +397,8 @@ async def scan_channels(app: Application):
                 try:
                     await app.bot.send_message(
                         chat_id=int(user_id),
-                        text=f"🆕 Найдено новых заказов: {found}\n📋 У тебя ожидают просмотра: {count}",
-                        reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("👀 Смотреть заказы", callback_data="queue:open")]]),
+                        text=f"ð ÐÐ°Ð¹Ð´ÐµÐ½Ð¾ Ð½Ð¾Ð²ÑÑ Ð·Ð°ÐºÐ°Ð·Ð¾Ð²: {found}\nð Ð£ ÑÐµÐ±Ñ Ð¾Ð¶Ð¸Ð´Ð°ÑÑ Ð¿ÑÐ¾ÑÐ¼Ð¾ÑÑÐ°: {count}",
+                        reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("ð Ð¡Ð¼Ð¾ÑÑÐµÑÑ Ð·Ð°ÐºÐ°Ð·Ñ", callback_data="queue:open")]]),
                     )
                 except TelegramError as exc:
                     log.warning("Queue notice failed for %s: %s", user_id, type(exc).__name__)
@@ -561,7 +561,7 @@ def _extract_web_jobs(source, data):
 
 
 async def scan_websites(app: Application):
-    """Читает только публичные JSON API, без входа и обхода ограничений сайтов."""
+    """Ð§Ð¸ÑÐ°ÐµÑ ÑÐ¾Ð»ÑÐºÐ¾ Ð¿ÑÐ±Ð»Ð¸ÑÐ½ÑÐµ JSON API, Ð±ÐµÐ· Ð²ÑÐ¾Ð´Ð° Ð¸ Ð¾Ð±ÑÐ¾Ð´Ð° Ð¾Ð³ÑÐ°Ð½Ð¸ÑÐµÐ½Ð¸Ð¹ ÑÐ°Ð¹ÑÐ¾Ð²."""
     checked = errors = found = 0
     for source, url in WEB_SOURCES.items():
         try:
@@ -588,11 +588,11 @@ async def scan_websites(app: Application):
                 if was_seen(key):
                     continue
                 body = (
-                    f"🌐 <b>Зарубежный сайт: {html.escape(source)}</b>\\n"
-                    f"💼 <b>{html.escape(title[:300])}</b>\\n"
-                    f"🏢 {html.escape(str(item.get('company') or 'Компания не указана')[:200])}\\n\\n"
+                    f"ð <b>ÐÐ°ÑÑÐ±ÐµÐ¶Ð½ÑÐ¹ ÑÐ°Ð¹Ñ: {html.escape(source)}</b>\\n"
+                    f"ð¼ <b>{html.escape(title[:300])}</b>\\n"
+                    f"ð¢ {html.escape(str(item.get('company') or 'ÐÐ¾Ð¼Ð¿Ð°Ð½Ð¸Ñ Ð½Ðµ ÑÐºÐ°Ð·Ð°Ð½Ð°')[:200])}\\n\\n"
                     f"{html.escape(_plain_text(description)[:2200])}\\n\\n"
-                    f"🔎 Тематика: {html.escape(', '.join(k for k in WEB_KEYWORDS if k.casefold() in (title + ' ' + _plain_text(description)).casefold())[:500])}"
+                    f"ð Ð¢ÐµÐ¼Ð°ÑÐ¸ÐºÐ°: {html.escape(', '.join(k for k in WEB_KEYWORDS if k.casefold() in (title + ' ' + _plain_text(description)).casefold())[:500])}"
                 )
                 with db() as con:
                     con.execute(
@@ -615,8 +615,8 @@ async def scan_websites(app: Application):
                 try:
                     await app.bot.send_message(
                         chat_id=int(user_id),
-                        text=f"🌐 Найдены новые вакансии на зарубежных сайтах: {found}\\n📋 Ожидают просмотра: {count}",
-                        reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("👀 Смотреть заказы", callback_data="queue:open")]]),
+                        text=f"ð ÐÐ°Ð¹Ð´ÐµÐ½Ñ Ð½Ð¾Ð²ÑÐµ Ð²Ð°ÐºÐ°Ð½ÑÐ¸Ð¸ Ð½Ð° Ð·Ð°ÑÑÐ±ÐµÐ¶Ð½ÑÑ ÑÐ°Ð¹ÑÐ°Ñ: {found}\\nð ÐÐ¶Ð¸Ð´Ð°ÑÑ Ð¿ÑÐ¾ÑÐ¼Ð¾ÑÑÐ°: {count}",
+                        reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("ð Ð¡Ð¼Ð¾ÑÑÐµÑÑ Ð·Ð°ÐºÐ°Ð·Ñ", callback_data="queue:open")]]),
                     )
                 except TelegramError as exc:
                     log.warning("Website queue notice failed for %s: %s", user_id, type(exc).__name__)
@@ -689,36 +689,38 @@ async def show_next(query, user_id: str):
     jobs = pending_jobs(user_id)
     if not jobs:
         await query.edit_message_text(
-            f"🎉 Все объявления просмотрены!\n⭐ Сохранено: {saved_count(user_id)}",
+            f"ð ÐÑÐµ Ð¾Ð±ÑÑÐ²Ð»ÐµÐ½Ð¸Ñ Ð¿ÑÐ¾ÑÐ¼Ð¾ÑÑÐµÐ½Ñ!\nâ­ Ð¡Ð¾ÑÑÐ°Ð½ÐµÐ½Ð¾: {saved_count(user_id)}",
             reply_markup=None,
         )
         return
     key, body, channel, link = jobs[0]
     total = len(jobs)
-    # Номер текущего объявления относительно уже просмотренных в этой очереди.
+    # ÐÐ¾Ð¼ÐµÑ ÑÐµÐºÑÑÐµÐ³Ð¾ Ð¾Ð±ÑÑÐ²Ð»ÐµÐ½Ð¸Ñ Ð¾ÑÐ½Ð¾ÑÐ¸ÑÐµÐ»ÑÐ½Ð¾ ÑÐ¶Ðµ Ð¿ÑÐ¾ÑÐ¼Ð¾ÑÑÐµÐ½Ð½ÑÑ Ð² ÑÑÐ¾Ð¹ Ð¾ÑÐµÑÐµÐ´Ð¸.
     with db() as con:
         reviewed = con.execute(
             "SELECT COUNT(*) FROM decisions WHERE user_id=?", (str(user_id),)
         ).fetchone()[0]
     number = reviewed + 1
     text = (
-        f"📋 <b>Заказ {number} из {number + total - 1}</b>\n"
-        f"⭐ Сохранено: {saved_count(user_id)}\n\n"
+        f"ð <b>ÐÐ°ÐºÐ°Ð· {number} Ð¸Ð· {number + total - 1}</b>\n"
+        f"â­ Ð¡Ð¾ÑÑÐ°Ð½ÐµÐ½Ð¾: {saved_count(user_id)}\n\n"
         f"{html.escape(body)}\n\n"
-        f"📣 Источник: {html.escape(channel)}\n"
-        f'<a href="{html.escape(link, quote=True)}">Открыть оригинал</a>'
+        f"ð£ ÐÑÑÐ¾ÑÐ½Ð¸Ðº: {html.escape(channel)}\n"
+        f'<a href="{html.escape(link, quote=True)}">ÐÑÐºÑÑÑÑ Ð¾ÑÐ¸Ð³Ð¸Ð½Ð°Ð»</a>'
     )
+    # ÐÐ¾ÑÐ¾ÑÐºÐ¸Ðµ callback_data: Telegram Ð´Ð¾Ð¿ÑÑÐºÐ°ÐµÑ Ð½Ðµ Ð±Ð¾Ð»ÐµÐµ 64 Ð±Ð°Ð¹Ñ.
+    # Ð¢ÐµÐºÑÑÐ¸Ð¹ Ð·Ð°ÐºÐ°Ð· Ð±ÐµÑÑÑÑÑ Ð¸Ð· Ð¾ÑÐµÑÐµÐ´Ð¸ Ð¿Ð¾Ð»ÑÐ·Ð¾Ð²Ð°ÑÐµÐ»Ñ Ð² queue_callback.
     keyboard = InlineKeyboardMarkup([
-        [InlineKeyboardButton("❌ Пропустить", callback_data=f"queue:skip:{key}"),
-         InlineKeyboardButton("✅ Оставить", callback_data=f"queue:keep:{key}")],
-        [InlineKeyboardButton("🇷🇺 Перевести", callback_data=f"queue:translate:{key}")],
-        [InlineKeyboardButton("⬅️ Назад", callback_data="queue:back")],
+        [InlineKeyboardButton("â ÐÑÐ¾Ð¿ÑÑÑÐ¸ÑÑ", callback_data="queue:skip"),
+         InlineKeyboardButton("â ÐÑÑÐ°Ð²Ð¸ÑÑ", callback_data="queue:keep")],
+        [InlineKeyboardButton("ð·ðº ÐÐµÑÐµÐ²ÐµÑÑÐ¸", callback_data="queue:translate")],
+        [InlineKeyboardButton("â¬ï¸ ÐÐ°Ð·Ð°Ð´", callback_data="queue:back")],
     ])
     await query.edit_message_text(text, parse_mode="HTML", reply_markup=keyboard, disable_web_page_preview=True)
 
 
 def translate_to_russian(text: str) -> str:
-    """Переводит текст через публичный Google Translate endpoint."""
+    """ÐÐµÑÐµÐ²Ð¾Ð´Ð¸Ñ ÑÐµÐºÑÑ ÑÐµÑÐµÐ· Ð¿ÑÐ±Ð»Ð¸ÑÐ½ÑÐ¹ Google Translate endpoint."""
     params = urllib.parse.urlencode({
         "client": "gtx", "sl": "auto", "tl": "ru", "dt": "t", "q": text[:4000]
     })
@@ -735,30 +737,27 @@ async def queue_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
     query = update.callback_query
     user_id = str(query.from_user.id)
     if user_id not in ALLOWED_USER_IDS:
-        await query.answer("Доступ закрыт.", show_alert=True)
+        await query.answer("ÐÐ¾ÑÑÑÐ¿ Ð·Ð°ÐºÑÑÑ.", show_alert=True)
         return
     await query.answer()
     data = query.data or ""
-    if data.startswith("queue:translate:"):
-        key = data.split(":", 2)[2]
-        with db() as con:
-            row = con.execute("SELECT body FROM jobs WHERE key=?", (key,)).fetchone()
-        if not row:
-            await query.answer("Объявление не найдено.", show_alert=True)
+    if data == "queue:translate":
+        jobs = pending_jobs(user_id)
+        if not jobs:
+            await query.answer("ÐÑÐµÑÐµÐ´Ñ Ð¿ÑÑÑÐ°.", show_alert=True)
             return
-        await query.answer("Перевожу…")
+        key, body, channel, link = jobs[0]
         try:
-            translated = await asyncio.to_thread(translate_to_russian, row[0])
-            # Ограничение Telegram на длину сообщения; кнопки остаются доступными.
+            translated = await asyncio.to_thread(translate_to_russian, body)
             translated = translated[:3500]
             await query.message.reply_text(
-                "🇷🇺 <b>Перевод на русский</b>\\n\\n" + html.escape(translated),
+                "ð·ðº <b>ÐÐµÑÐµÐ²Ð¾Ð´ Ð½Ð° ÑÑÑÑÐºÐ¸Ð¹</b>\\n\\n" + html.escape(translated),
                 parse_mode="HTML", disable_web_page_preview=True,
             )
         except Exception as exc:
             log.warning("Translation failed: %s", type(exc).__name__)
             await query.message.reply_text(
-                "⚠️ Не удалось перевести. Попробуй позже."
+                "â ï¸ ÐÐµ ÑÐ´Ð°Ð»Ð¾ÑÑ Ð¿ÐµÑÐµÐ²ÐµÑÑÐ¸. ÐÐ¾Ð¿ÑÐ¾Ð±ÑÐ¹ Ð¿Ð¾Ð·Ð¶Ðµ."
             )
         return
     if data == "queue:open":
@@ -775,14 +774,18 @@ async def queue_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
                 con.commit()
         await show_next(query, user_id)
         return
-    parts = data.split(":", 2)
-    if len(parts) == 3 and parts[1] in ("skip", "keep"):
-        decision = "keep" if parts[1] == "keep" else "skip"
+    if data in ("queue:skip", "queue:keep"):
+        jobs = pending_jobs(user_id)
+        if not jobs:
+            await query.edit_message_text("ð­ ÐÑÐµÑÐµÐ´Ñ Ð¿ÑÑÑÐ°.", reply_markup=None)
+            return
+        key = jobs[0][0]
+        decision = "keep" if data == "queue:keep" else "skip"
         with db() as con:
             con.execute(
                 "INSERT OR IGNORE INTO decisions(user_id, job_key, decision, decided_at) "
                 "VALUES (?, ?, ?, ?)",
-                (user_id, parts[2], decision, datetime.now(timezone.utc).isoformat()),
+                (user_id, key, decision, datetime.now(timezone.utc).isoformat()),
             )
             con.commit()
         await show_next(query, user_id)
@@ -790,7 +793,7 @@ async def queue_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 async def saved_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if not is_owner(update):
-        await reply(update, "Доступ закрыт.")
+        await reply(update, "ÐÐ¾ÑÑÑÐ¿ Ð·Ð°ÐºÑÑÑ.")
         return
     user_id = str(update.effective_user.id)
     with db() as con:
@@ -800,10 +803,10 @@ async def saved_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
             (user_id,),
         ).fetchall()
     if not rows:
-        await reply(update, "⭐ Пока нет сохранённых заказов.")
+        await reply(update, "â­ ÐÐ¾ÐºÐ° Ð½ÐµÑ ÑÐ¾ÑÑÐ°Ð½ÑÐ½Ð½ÑÑ Ð·Ð°ÐºÐ°Ð·Ð¾Ð².")
         return
-    text = "⭐ <b>Сохранённые заказы</b>\n\n" + "\n\n".join(
-        f"{i}. {html.escape(body[:700])}\n<a href=\"{html.escape(link, quote=True)}\">Открыть оригинал</a>"
+    text = "â­ <b>Ð¡Ð¾ÑÑÐ°Ð½ÑÐ½Ð½ÑÐµ Ð·Ð°ÐºÐ°Ð·Ñ</b>\n\n" + "\n\n".join(
+        f"{i}. {html.escape(body[:700])}\n<a href=\"{html.escape(link, quote=True)}\">ÐÑÐºÑÑÑÑ Ð¾ÑÐ¸Ð³Ð¸Ð½Ð°Ð»</a>"
         for i, (body, link) in enumerate(rows, 1)
     )
     await update.effective_chat.send_message(text=text, parse_mode="HTML", disable_web_page_preview=True)
@@ -811,7 +814,7 @@ async def saved_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 async def stats_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if not is_owner(update):
-        await reply(update, "Доступ закрыт.")
+        await reply(update, "ÐÐ¾ÑÑÑÐ¿ Ð·Ð°ÐºÑÑÑ.")
         return
     user_id = str(update.effective_user.id)
     with db() as con:
@@ -819,129 +822,129 @@ async def stats_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
         kept = con.execute("SELECT COUNT(*) FROM decisions WHERE user_id=? AND decision='keep'", (user_id,)).fetchone()[0]
         skipped = con.execute("SELECT COUNT(*) FROM decisions WHERE user_id=? AND decision='skip'", (user_id,)).fetchone()[0]
     paused, keyword = get_pref(user_id)
-    await reply(update, f"📊 Твоя статистика\nВсего найдено: {total}\n⭐ Сохранено: {kept}\n❌ Пропущено: {skipped}\n⏳ Ожидают просмотра: {pending_count(user_id)}\nУведомления: {'пауза' if paused else 'включены'}\nФильтр: {html.escape(keyword) if keyword else 'не задан'}")
+    await reply(update, f"ð Ð¢Ð²Ð¾Ñ ÑÑÐ°ÑÐ¸ÑÑÐ¸ÐºÐ°\nÐÑÐµÐ³Ð¾ Ð½Ð°Ð¹Ð´ÐµÐ½Ð¾: {total}\nâ­ Ð¡Ð¾ÑÑÐ°Ð½ÐµÐ½Ð¾: {kept}\nâ ÐÑÐ¾Ð¿ÑÑÐµÐ½Ð¾: {skipped}\nâ³ ÐÐ¶Ð¸Ð´Ð°ÑÑ Ð¿ÑÐ¾ÑÐ¼Ð¾ÑÑÐ°: {pending_count(user_id)}\nÐ£Ð²ÐµÐ´Ð¾Ð¼Ð»ÐµÐ½Ð¸Ñ: {'Ð¿Ð°ÑÐ·Ð°' if paused else 'Ð²ÐºÐ»ÑÑÐµÐ½Ñ'}\nÐ¤Ð¸Ð»ÑÑÑ: {html.escape(keyword) if keyword else 'Ð½Ðµ Ð·Ð°Ð´Ð°Ð½'}")
 
 
 async def pause_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if not is_owner(update):
-        await reply(update, "Доступ закрыт.")
+        await reply(update, "ÐÐ¾ÑÑÑÐ¿ Ð·Ð°ÐºÑÑÑ.")
         return
     user_id = str(update.effective_user.id)
     paused, _ = get_pref(user_id)
     set_paused(user_id, not paused)
-    await reply(update, "⏸️ Уведомления приостановлены. Очередь доступна командой /queue." if not paused else "▶️ Уведомления снова включены.")
+    await reply(update, "â¸ï¸ Ð£Ð²ÐµÐ´Ð¾Ð¼Ð»ÐµÐ½Ð¸Ñ Ð¿ÑÐ¸Ð¾ÑÑÐ°Ð½Ð¾Ð²Ð»ÐµÐ½Ñ. ÐÑÐµÑÐµÐ´Ñ Ð´Ð¾ÑÑÑÐ¿Ð½Ð° ÐºÐ¾Ð¼Ð°Ð½Ð´Ð¾Ð¹ /queue." if not paused else "â¶ï¸ Ð£Ð²ÐµÐ´Ð¾Ð¼Ð»ÐµÐ½Ð¸Ñ ÑÐ½Ð¾Ð²Ð° Ð²ÐºÐ»ÑÑÐµÐ½Ñ.")
 
 
 async def filter_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if not is_owner(update):
-        await reply(update, "Доступ закрыт.")
+        await reply(update, "ÐÐ¾ÑÑÑÐ¿ Ð·Ð°ÐºÑÑÑ.")
         return
     user_id = str(update.effective_user.id)
     keyword = " ".join(context.args).strip()
     if keyword.lower() == "clear":
         keyword = ""
     set_keyword(user_id, keyword)
-    await reply(update, (f"🔍 Фильтр установлен: {html.escape(keyword)}\nВ очереди: {pending_count(user_id)}" if keyword else "🔍 Фильтр очищен. Показываю все подходящие объявления."))
+    await reply(update, (f"ð Ð¤Ð¸Ð»ÑÑÑ ÑÑÑÐ°Ð½Ð¾Ð²Ð»ÐµÐ½: {html.escape(keyword)}\nÐ Ð¾ÑÐµÑÐµÐ´Ð¸: {pending_count(user_id)}" if keyword else "ð Ð¤Ð¸Ð»ÑÑÑ Ð¾ÑÐ¸ÑÐµÐ½. ÐÐ¾ÐºÐ°Ð·ÑÐ²Ð°Ñ Ð²ÑÐµ Ð¿Ð¾Ð´ÑÐ¾Ð´ÑÑÐ¸Ðµ Ð¾Ð±ÑÑÐ²Ð»ÐµÐ½Ð¸Ñ."))
 
 
 async def queue_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if not is_owner(update):
-        await reply(update, "Доступ закрыт.")
+        await reply(update, "ÐÐ¾ÑÑÑÐ¿ Ð·Ð°ÐºÑÑÑ.")
         return
     user_id = str(update.effective_user.id)
     jobs = pending_jobs(user_id)
     if not jobs:
-        await reply(update, "📭 Нет объявлений для просмотра. Попробуй /scan или очисти фильтр командой /filter clear.")
+        await reply(update, "ð­ ÐÐµÑ Ð¾Ð±ÑÑÐ²Ð»ÐµÐ½Ð¸Ð¹ Ð´Ð»Ñ Ð¿ÑÐ¾ÑÐ¼Ð¾ÑÑÐ°. ÐÐ¾Ð¿ÑÐ¾Ð±ÑÐ¹ /scan Ð¸Ð»Ð¸ Ð¾ÑÐ¸ÑÑÐ¸ ÑÐ¸Ð»ÑÑÑ ÐºÐ¾Ð¼Ð°Ð½Ð´Ð¾Ð¹ /filter clear.")
         return
     await update.effective_chat.send_message(
-        text=f"📋 Найдено для просмотра: {len(jobs)}\nНажми кнопку, чтобы начать.",
-        reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("👀 Смотреть заказы", callback_data="queue:open")]]),
+        text=f"ð ÐÐ°Ð¹Ð´ÐµÐ½Ð¾ Ð´Ð»Ñ Ð¿ÑÐ¾ÑÐ¼Ð¾ÑÑÐ°: {len(jobs)}\nÐÐ°Ð¶Ð¼Ð¸ ÐºÐ½Ð¾Ð¿ÐºÑ, ÑÑÐ¾Ð±Ñ Ð½Ð°ÑÐ°ÑÑ.",
+        reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("ð Ð¡Ð¼Ð¾ÑÑÐµÑÑ Ð·Ð°ÐºÐ°Ð·Ñ", callback_data="queue:open")]]),
     )
 
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if not is_owner(update):
-        await reply(update, "Доступ закрыт.")
+        await reply(update, "ÐÐ¾ÑÑÑÐ¿ Ð·Ð°ÐºÑÑÑ.")
         return
     await reply(
         update,
-        "Привет! Я ищу свежие объявления о заказах на дизайн карточек товаров.\n\n"
-        f"Возраст объявлений: до {MAX_AGE_HOURS} ч.\n"
-        f"Интервал проверки: {SCAN_MINUTES} мин.\n\n"
-        "/status — состояние\n"
-        "/scan — проверить Telegram-каналы сейчас\n"
-        "/webscan — проверить зарубежные сайты сейчас\n"
-        "/saved — сохранённые заказы\n"
-        "/stats — статистика\n"
-        "/queue — открыть очередь\n"
-        "/pause — пауза/возобновление уведомлений\n"
-        "/filter слово — фильтр по словам; /filter clear — сброс\n"
-        "/myid — узнать Telegram ID\n"
-        "Поиск работает без нейросети.",
+        "ÐÑÐ¸Ð²ÐµÑ! Ð¯ Ð¸ÑÑ ÑÐ²ÐµÐ¶Ð¸Ðµ Ð¾Ð±ÑÑÐ²Ð»ÐµÐ½Ð¸Ñ Ð¾ Ð·Ð°ÐºÐ°Ð·Ð°Ñ Ð½Ð° Ð´Ð¸Ð·Ð°Ð¹Ð½ ÐºÐ°ÑÑÐ¾ÑÐµÐº ÑÐ¾Ð²Ð°ÑÐ¾Ð².\n\n"
+        f"ÐÐ¾Ð·ÑÐ°ÑÑ Ð¾Ð±ÑÑÐ²Ð»ÐµÐ½Ð¸Ð¹: Ð´Ð¾ {MAX_AGE_HOURS} Ñ.\n"
+        f"ÐÐ½ÑÐµÑÐ²Ð°Ð» Ð¿ÑÐ¾Ð²ÐµÑÐºÐ¸: {SCAN_MINUTES} Ð¼Ð¸Ð½.\n\n"
+        "/status â ÑÐ¾ÑÑÐ¾ÑÐ½Ð¸Ðµ\n"
+        "/scan â Ð¿ÑÐ¾Ð²ÐµÑÐ¸ÑÑ Telegram-ÐºÐ°Ð½Ð°Ð»Ñ ÑÐµÐ¹ÑÐ°Ñ\n"
+        "/webscan â Ð¿ÑÐ¾Ð²ÐµÑÐ¸ÑÑ Ð·Ð°ÑÑÐ±ÐµÐ¶Ð½ÑÐµ ÑÐ°Ð¹ÑÑ ÑÐµÐ¹ÑÐ°Ñ\n"
+        "/saved â ÑÐ¾ÑÑÐ°Ð½ÑÐ½Ð½ÑÐµ Ð·Ð°ÐºÐ°Ð·Ñ\n"
+        "/stats â ÑÑÐ°ÑÐ¸ÑÑÐ¸ÐºÐ°\n"
+        "/queue â Ð¾ÑÐºÑÑÑÑ Ð¾ÑÐµÑÐµÐ´Ñ\n"
+        "/pause â Ð¿Ð°ÑÐ·Ð°/Ð²Ð¾Ð·Ð¾Ð±Ð½Ð¾Ð²Ð»ÐµÐ½Ð¸Ðµ ÑÐ²ÐµÐ´Ð¾Ð¼Ð»ÐµÐ½Ð¸Ð¹\n"
+        "/filter ÑÐ»Ð¾Ð²Ð¾ â ÑÐ¸Ð»ÑÑÑ Ð¿Ð¾ ÑÐ»Ð¾Ð²Ð°Ð¼; /filter clear â ÑÐ±ÑÐ¾Ñ\n"
+        "/myid â ÑÐ·Ð½Ð°ÑÑ Telegram ID\n"
+        "ÐÐ¾Ð¸ÑÐº ÑÐ°Ð±Ð¾ÑÐ°ÐµÑ Ð±ÐµÐ· Ð½ÐµÐ¹ÑÐ¾ÑÐµÑÐ¸.",
     )
 
 
 async def myid(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await reply(
         update,
-        f"Твой Telegram ID: "
-        f"{update.effective_user.id if update.effective_user else 'не определён'}",
+        f"Ð¢Ð²Ð¾Ð¹ Telegram ID: "
+        f"{update.effective_user.id if update.effective_user else 'Ð½Ðµ Ð¾Ð¿ÑÐµÐ´ÐµÐ»ÑÐ½'}",
     )
 
 
 async def status(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if not is_owner(update):
-        await reply(update, "Доступ закрыт.")
+        await reply(update, "ÐÐ¾ÑÑÑÐ¿ Ð·Ð°ÐºÑÑÑ.")
         return
     connected = user_client is not None and user_client.is_connected()
     await reply(
         update,
-        f"🟢 Бот запущен\n"
-        f"Telegram-аккаунт подключён: {'да' if connected else 'нет'}\n"
-        f"Пользователей: {len(ALLOWED_USER_IDS)}\n"
-        f"Каналов в списке: {len(CHANNELS)}\n"
-        f"Сайтов вакансий: {len(WEB_SOURCES)}\n"
-        f"Проверка сайтов: каждые {WEB_SCAN_HOURS} ч.\n"
-        f"Интервал проверки: {SCAN_MINUTES} мин.\n"
-        f"Максимальный возраст заявки: {MAX_AGE_HOURS} ч.",
+        f"ð¢ ÐÐ¾Ñ Ð·Ð°Ð¿ÑÑÐµÐ½\n"
+        f"Telegram-Ð°ÐºÐºÐ°ÑÐ½Ñ Ð¿Ð¾Ð´ÐºÐ»ÑÑÑÐ½: {'Ð´Ð°' if connected else 'Ð½ÐµÑ'}\n"
+        f"ÐÐ¾Ð»ÑÐ·Ð¾Ð²Ð°ÑÐµÐ»ÐµÐ¹: {len(ALLOWED_USER_IDS)}\n"
+        f"ÐÐ°Ð½Ð°Ð»Ð¾Ð² Ð² ÑÐ¿Ð¸ÑÐºÐµ: {len(CHANNELS)}\n"
+        f"Ð¡Ð°Ð¹ÑÐ¾Ð² Ð²Ð°ÐºÐ°Ð½ÑÐ¸Ð¹: {len(WEB_SOURCES)}\n"
+        f"ÐÑÐ¾Ð²ÐµÑÐºÐ° ÑÐ°Ð¹ÑÐ¾Ð²: ÐºÐ°Ð¶Ð´ÑÐµ {WEB_SCAN_HOURS} Ñ.\n"
+        f"ÐÐ½ÑÐµÑÐ²Ð°Ð» Ð¿ÑÐ¾Ð²ÐµÑÐºÐ¸: {SCAN_MINUTES} Ð¼Ð¸Ð½.\n"
+        f"ÐÐ°ÐºÑÐ¸Ð¼Ð°Ð»ÑÐ½ÑÐ¹ Ð²Ð¾Ð·ÑÐ°ÑÑ Ð·Ð°ÑÐ²ÐºÐ¸: {MAX_AGE_HOURS} Ñ.",
     )
 
 
 async def scan_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if not is_owner(update):
-        await reply(update, "Доступ закрыт.")
+        await reply(update, "ÐÐ¾ÑÑÑÐ¿ Ð·Ð°ÐºÑÑÑ.")
         return
     if scan_lock.locked():
-        await reply(update, "⏳ Проверка уже выполняется.")
+        await reply(update, "â³ ÐÑÐ¾Ð²ÐµÑÐºÐ° ÑÐ¶Ðµ Ð²ÑÐ¿Ð¾Ð»Ð½ÑÐµÑÑÑ.")
         return
-    await reply(update, "🔎 Проверяю Telegram-каналы…")
+    await reply(update, "ð ÐÑÐ¾Ð²ÐµÑÑÑ Telegram-ÐºÐ°Ð½Ð°Ð»Ñâ¦")
     result = await run_scan(context.application)
     if result is None:
-        await reply(update, "⚠️ Проверка не завершилась. Посмотри журнал FadeHost.")
+        await reply(update, "â ï¸ ÐÑÐ¾Ð²ÐµÑÐºÐ° Ð½Ðµ Ð·Ð°Ð²ÐµÑÑÐ¸Ð»Ð°ÑÑ. ÐÐ¾ÑÐ¼Ð¾ÑÑÐ¸ Ð¶ÑÑÐ½Ð°Ð» FadeHost.")
     else:
         await reply(
             update,
-            "✅ Проверка завершена.\n"
-            f"Доступно каналов: {result['checked']} из {result['total']}\n"
-            f"Ошибок: {result['errors']}\n"
-            f"Новых подходящих объявлений: {result['found']}\n"
-            f"Старых объявлений пропущено: {result['old']}",
+            "â ÐÑÐ¾Ð²ÐµÑÐºÐ° Ð·Ð°Ð²ÐµÑÑÐµÐ½Ð°.\n"
+            f"ÐÐ¾ÑÑÑÐ¿Ð½Ð¾ ÐºÐ°Ð½Ð°Ð»Ð¾Ð²: {result['checked']} Ð¸Ð· {result['total']}\n"
+            f"ÐÑÐ¸Ð±Ð¾Ðº: {result['errors']}\n"
+            f"ÐÐ¾Ð²ÑÑ Ð¿Ð¾Ð´ÑÐ¾Ð´ÑÑÐ¸Ñ Ð¾Ð±ÑÑÐ²Ð»ÐµÐ½Ð¸Ð¹: {result['found']}\n"
+            f"Ð¡ÑÐ°ÑÑÑ Ð¾Ð±ÑÑÐ²Ð»ÐµÐ½Ð¸Ð¹ Ð¿ÑÐ¾Ð¿ÑÑÐµÐ½Ð¾: {result['old']}",
         )
 
 
 
 async def webscan_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if not is_owner(update):
-        await reply(update, "Доступ закрыт.")
+        await reply(update, "ÐÐ¾ÑÑÑÐ¿ Ð·Ð°ÐºÑÑÑ.")
         return
-    await reply(update, "🌐 Проверяю зарубежные сайты с вакансиями…")
+    await reply(update, "ð ÐÑÐ¾Ð²ÐµÑÑÑ Ð·Ð°ÑÑÐ±ÐµÐ¶Ð½ÑÐµ ÑÐ°Ð¹ÑÑ Ñ Ð²Ð°ÐºÐ°Ð½ÑÐ¸ÑÐ¼Ð¸â¦")
     result = await scan_websites(context.application)
     await reply(
         update,
-        "✅ Проверка сайтов завершена.\n"
-        f"Источников проверено: {result['checked']} из {result['total']}\n"
-        f"Ошибок: {result['errors']}\n"
-        f"Новых подходящих объявлений: {result['found']}",
+        "â ÐÑÐ¾Ð²ÐµÑÐºÐ° ÑÐ°Ð¹ÑÐ¾Ð² Ð·Ð°Ð²ÐµÑÑÐµÐ½Ð°.\n"
+        f"ÐÑÑÐ¾ÑÐ½Ð¸ÐºÐ¾Ð² Ð¿ÑÐ¾Ð²ÐµÑÐµÐ½Ð¾: {result['checked']} Ð¸Ð· {result['total']}\n"
+        f"ÐÑÐ¸Ð±Ð¾Ðº: {result['errors']}\n"
+        f"ÐÐ¾Ð²ÑÑ Ð¿Ð¾Ð´ÑÐ¾Ð´ÑÑÐ¸Ñ Ð¾Ð±ÑÑÐ²Ð»ÐµÐ½Ð¸Ð¹: {result['found']}",
     )
 
 async def run_scan(app: Application):
