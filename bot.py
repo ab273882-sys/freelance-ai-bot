@@ -1,4 +1,4 @@
-import asyncio
+
 import html
 from html.parser import HTMLParser
 import logging
@@ -640,12 +640,17 @@ async def scan_websites(app: Application):
                 key = f"web:{source}:{job_id}"
                 if was_seen(key):
                     continue
+                company = _repair_mojibake(str(item.get("company") or "\u041a\u043e\u043c\u043f\u0430\u043d\u0438\u044f \u043d\u0435 \u0443\u043a\u0430\u0437\u0430\u043d\u0430"))
+                topics = ", ".join(
+                    keyword for keyword in WEB_KEYWORDS
+                    if keyword.casefold() in (title + " " + _plain_text(description)).casefold()
+                )[:500]
                 body = (
-                    f"\U0001f310 <b>\u0417\u0430\u0440\u0443\u0431\u0435\u0436\u043d\u044b\u0439 \u0441\u0430\u0439\u0442: {html.escape(source)}</b>\n"
+                    f"\U0001f310 <b>{html.escape(source)}</b>\n"
                     f"\U0001f4bc <b>{html.escape(title[:300])}</b>\n"
-                    f"\U0001f3e2 {html.escape(_repair_mojibake(str(item.get('company') or '\u041a\u043e\u043c\u043f\u0430\u043d\u0438\u044f \u043d\u0435 \u0443\u043a\u0430\u0437\u0430\u043d\u0430'))[:200])}\n\n"
+                    f"\U0001f3e2 {html.escape(company[:200])}\n\n"
                     f"{html.escape(_plain_text(description)[:2200])}\n\n"
-                    f"\U0001f50e \u0422\u0435\u043c\u0430\u0442\u0438\u043a\u0430: {html.escape(', '.join(k for k in WEB_KEYWORDS if k.casefold() in (title + ' ' + _plain_text(description)).casefold())[:500])}"
+                    f"\U0001f50e \\u0422\\u0435\\u043c\\u0430\\u0442\\u0438\\u043a\\u0430: {html.escape(topics)}"
                 )
                 with db() as con:
                     con.execute(
