@@ -1,5 +1,6 @@
-import asyncio
+
 import html
+from html.parser import HTMLParser
 import logging
 import os
 import re
@@ -34,6 +35,36 @@ MAX_MESSAGES_PER_CHANNEL = max(
 )
 MAX_AGE_HOURS = max(1, int(os.getenv("MAX_AGE_HOURS", "24")))
 SEND_DELAY = max(1, int(os.getenv("SEND_DELAY", "2")))
+
+# Зарубежные сайты с публичными API. Проверяются отдельно от Telegram.
+# Интервал 6 часов: Remotive рекомендует не более 4 запросов в сутки.
+WEB_SCAN_HOURS = max(6, int(os.getenv("WEB_SCAN_HOURS", "6")))
+WEB_MAX_AGE_HOURS = max(1, int(os.getenv("WEB_MAX_AGE_HOURS", "72")))
+
+WEB_SOURCES = {
+    "Remote OK": "https://remoteok.com/api",
+    "Himalayas": "https://himalayas.app/jobs/api?limit=20",
+    "Remotive": "https://remotive.com/api/remote-jobs?limit=100",
+    "Jobicy": "https://jobicy.com/api/v2/remote-jobs?count=50",
+    # Дополнительные открытые ленты удалённых вакансий
+    "RemoteJobs.org": "https://remotejobs.org/api/v1/jobs?limit=50",
+    "Career Nest": "https://careernest.cloud/api/feed?limit=100",
+    "Arbeitnow": "https://www.arbeitnow.com/api/job-board-api",
+    "Remote First Jobs": "https://remotefirstjobs.com/api/search-jobs",
+}
+
+# Целевые направления: анимация логотипов, карточки товаров и любые AI-роли.
+WEB_KEYWORDS = [
+    "logo animation", "animated logo", "animate logo", "motion graphics",
+    "motion designer", "logo animator", "brand animation",
+    "product listing", "ecommerce product", "e-commerce product",
+    "amazon listing", "amazon product", "product images",
+    "product image", "product infographic", "ecommerce designer",
+    "e-commerce designer", "marketplace listing", "product card",
+    "ai", "artificial intelligence", "generative ai", "machine learning",
+    "llm", "prompt engineer", "ai trainer", "ai data", "ai evaluator",
+    "ai annotator", "ai content", "ai artist", "ai designer",
+]
 
 CHANNELS = [
     '@MPdesigns',
@@ -80,43 +111,9 @@ CHANNELS = [
     '@udafrii',
     '@FreeWorkFeed',
     '@workk_on',
-
-    # Зарубежные каналы
+    # Зарубежные каналы (английский/испанский)
     '@remotegraphicdesignjobs',
     '@findmyremote_design',
-    '@noicejobschannel',
-    '@remotejobswork',
-    '@all_remote_jobs',
-
-    # Дополнительные каналы для дизайнеров
-    '@designbirzha',
-    '@design_jobs_uxui',
-    '@jun_hi_vacancies',
-    '@uxwork',
-    '@ux_ui_graph_designers_job',
-    '@uiux_jobs_resumes',
-    '@dprofilejob',
-    '@zakazi_designers',
-    '@dizayner_vakansiii',
-    '@designvacancy',
-    '@TGwork',
-
-    # Общий фриланс и удалённая работа
-    '@itfreelance',
-    '@Freelance_Jobs_online',
-    '@polyaluzjob',
-    '@uvetrovoi',
-
-    # Смежные дизайнерские ниши
-    '@dsgn_box',
-    '@figmaweb',
-    '@behancerdsgn',
-    '@behancedsgn',
-    '@psd_eu',
-    '@dsgn_tutorial',
-    '@cyrillicdesign',
-    '@desgangchat',
-    '@holder_job_marketing',
 ]
 # Строгий фильтр: пропускаем только явный поиск исполнителя/дизайнера.
 # Общие слова вроде «инфографика», «WB» и «карточки» сами по себе не подходят.
@@ -415,6 +412,226 @@ async def scan_channels(app: Application):
     }
 
 
+
+class _HTMLText(HTMLParser):
+    def __init__(self):
+        super().__init__()
+        self.parts = []
+
+    def handle_data(self, data):
+        if data and data.strip():
+            self.parts.append(data.strip())
+
+
+def _plain_text(value):
+    parser = _HTMLText()
+    try:
+        parser.feed(value or "")
+        return re.sub(r"\s+", " ", " ".join(parser.parts)).strip()
+    except Exception:
+        return re.sub(r"<[^>]+>", " ", value or "").strip()
+
+
+def _fetch_json(url):
+    request = urllib.request.Request(
+        url, headers={"User-Agent": "FreelanceOpportunityBot/1.0"}
+    )
+    with urllib.request.urlopen(request, timeout=25) as response:
+        return json.loads(response.read().decode("utf-8"))
+
+
+def _web_job_is_relevant(title, description):
+    combined = (str(title or "") + " " + _plain_text(str(description or ""))).casefold()
+    return any(term.casefold() in combined for term in WEB_KEYWORDS)
+
+
+def _web_job_date(value):
+    if not value:
+        return None
+    try:
+        if isinstance(value, (int, float)):
+            return datetime.fromtimestamp(value, timezone.utc)
+        raw = str(value).replace("Z", "+00:00")
+        parsed = datetime.fromisoformat(raw)
+        if parsed.tzinfo is None:
+            parsed = parsed.replace(tzinfo=timezone.utc)
+        return parsed.astimezone(timezone.utc)
+    except (ValueError, TypeError, OverflowError):
+        return None
+
+
+def _extract_web_jobs(source, data):
+    if source == "Remote OK":
+        items = data if isinstance(data, list) else []
+        result = []
+        for item in items:
+            if not isinstance(item, dict) or not item.get("id"):
+                continue
+            result.append({
+                "id": str(item["id"]),
+                "title": item.get("position") or item.get("title") or "",
+                "company": item.get("company") or "",
+                "description": item.get("description") or "",
+                "url": item.get("url") or "",
+                "date": item.get("date") or item.get("epoch"),
+            })
+        return result
+
+    if source == "Himalayas":
+        items = data.get("jobs", []) if isinstance(data, dict) else []
+        result = []
+        for item in items:
+            result.append({
+                "id": str(item.get("guid") or item.get("id") or item.get("applicationLink") or ""),
+                "title": item.get("title") or "",
+                "company": item.get("companyName") or "",
+                "description": item.get("description") or "",
+                "url": item.get("applicationLink") or item.get("guid") or "",
+                "date": item.get("pubDate") or item.get("pubDateISO"),
+            })
+        return result
+
+    if source == "Remotive":
+        items = data.get("jobs", []) if isinstance(data, dict) else []
+        return [{
+            "id": str(item.get("id") or item.get("url") or ""),
+            "title": item.get("title") or "",
+            "company": item.get("company_name") or "",
+            "description": item.get("description") or "",
+            "url": item.get("url") or "",
+            "date": item.get("publication_date") or "",
+        } for item in items]
+
+    if source == "Jobicy":
+        items = data.get("jobs", []) if isinstance(data, dict) else []
+        return [{
+            "id": str(item.get("id") or item.get("url") or ""),
+            "title": item.get("jobTitle") or "",
+            "company": item.get("companyName") or "",
+            "description": item.get("jobDescription") or "",
+            "url": item.get("url") or "",
+            "date": item.get("pubDate") or item.get("datePosted") or "",
+        } for item in items]
+
+    if source == "RemoteJobs.org":
+        items = data.get("data", data.get("jobs", [])) if isinstance(data, dict) else []
+        return [{
+            "id": str(item.get("id") or item.get("job_url") or item.get("url") or ""),
+            "title": item.get("title") or item.get("name") or "",
+            "company": item.get("company") or item.get("company_name") or "",
+            "description": item.get("description") or "",
+            "url": item.get("job_url") or item.get("url") or "",
+            "date": item.get("posted_at") or item.get("created_at") or "",
+        } for item in items if isinstance(item, dict)]
+
+    if source == "Career Nest":
+        items = data.get("jobs", data.get("data", [])) if isinstance(data, dict) else []
+        return [{
+            "id": str(item.get("id") or item.get("job_url") or item.get("url") or ""),
+            "title": item.get("title") or item.get("job_title") or "",
+            "company": item.get("company") or item.get("company_name") or "",
+            "description": item.get("description") or "",
+            "url": item.get("job_url") or item.get("url") or "",
+            "date": item.get("posted_at") or item.get("published_at") or "",
+        } for item in items if isinstance(item, dict)]
+
+    if source == "Arbeitnow":
+        items = data.get("data", []) if isinstance(data, dict) else []
+        return [{
+            "id": str(item.get("slug") or item.get("url") or ""),
+            "title": item.get("title") or "",
+            "company": item.get("company_name") or "",
+            "description": item.get("description") or "",
+            "url": item.get("url") or "",
+            "date": item.get("created_at") or "",
+        } for item in items if isinstance(item, dict)]
+
+    if source == "Remote First Jobs":
+        items = data.get("jobs", []) if isinstance(data, dict) else []
+        return [{
+            "id": str(item.get("id") or item.get("url") or ""),
+            "title": item.get("title") or "",
+            "company": item.get("company_name") or "",
+            "description": item.get("description") or "",
+            "url": item.get("url") or "",
+            "date": item.get("published_at") or "",
+        } for item in items if isinstance(item, dict)]
+
+    return []
+
+
+async def scan_websites(app: Application):
+    """Читает только публичные JSON API, без входа и обхода ограничений сайтов."""
+    checked = errors = found = 0
+    for source, url in WEB_SOURCES.items():
+        try:
+            data = await asyncio.to_thread(_fetch_json, url)
+            checked += 1
+            for item in _extract_web_jobs(source, data):
+                title = str(item.get("title") or "").strip()
+                description = str(item.get("description") or "").strip()
+                link = str(item.get("url") or "").strip()
+                job_id = str(item.get("id") or link).strip()
+                if not title or not link or not job_id:
+                    continue
+                if not link.startswith(("https://", "http://")):
+                    continue
+                published = _web_job_date(item.get("date"))
+                if published:
+                    age = datetime.now(timezone.utc) - published
+                    if age < timedelta(0) or age > timedelta(hours=WEB_MAX_AGE_HOURS):
+                        continue
+                if not _web_job_is_relevant(title, description):
+                    continue
+
+                key = f"web:{source}:{job_id}"
+                if was_seen(key):
+                    continue
+                body = (
+                    f"🌐 <b>Зарубежный сайт: {html.escape(source)}</b>\\n"
+                    f"💼 <b>{html.escape(title[:300])}</b>\\n"
+                    f"🏢 {html.escape(str(item.get('company') or 'Компания не указана')[:200])}\\n\\n"
+                    f"{html.escape(_plain_text(description)[:2200])}\\n\\n"
+                    f"🔎 Тематика: {html.escape(', '.join(k for k in WEB_KEYWORDS if k.casefold() in (title + ' ' + _plain_text(description)).casefold())[:500])}"
+                )
+                with db() as con:
+                    con.execute(
+                        "INSERT OR IGNORE INTO jobs(key, body, channel, link, created_at) VALUES (?, ?, ?, ?, ?)",
+                        (key, body[:3500], source, link, (published or datetime.now(timezone.utc)).isoformat()),
+                    )
+                    con.commit()
+                mark_seen(key)
+                found += 1
+        except Exception as exc:
+            errors += 1
+            log.warning("Website scan failed: %s (%s)", source, type(exc).__name__)
+
+    if found:
+        for user_id in sorted(ALLOWED_USER_IDS):
+            if is_paused(user_id):
+                continue
+            count = pending_count(user_id)
+            if count:
+                try:
+                    await app.bot.send_message(
+                        chat_id=int(user_id),
+                        text=f"🌐 Найдены новые вакансии на зарубежных сайтах: {found}\\n📋 Ожидают просмотра: {count}",
+                        reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("👀 Смотреть заказы", callback_data="queue:open")]]),
+                    )
+                except TelegramError as exc:
+                    log.warning("Website queue notice failed for %s: %s", user_id, type(exc).__name__)
+
+    return {"checked": checked, "errors": errors, "found": found, "total": len(WEB_SOURCES)}
+
+
+async def scheduled_web_scan(context: ContextTypes.DEFAULT_TYPE):
+    result = await scan_websites(context.application)
+    log.info(
+        "Website scan complete: checked=%s/%s errors=%s found=%s",
+        result["checked"], result["total"], result["errors"], result["found"],
+    )
+
+
 def get_pref(user_id: str):
     with db() as con:
         con.execute("INSERT OR IGNORE INTO user_prefs(user_id) VALUES (?)", (str(user_id),))
@@ -652,7 +869,8 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
         f"Возраст объявлений: до {MAX_AGE_HOURS} ч.\n"
         f"Интервал проверки: {SCAN_MINUTES} мин.\n\n"
         "/status — состояние\n"
-        "/scan — проверить каналы сейчас\n"
+        "/scan — проверить Telegram-каналы сейчас\n"
+        "/webscan — проверить зарубежные сайты сейчас\n"
         "/saved — сохранённые заказы\n"
         "/stats — статистика\n"
         "/queue — открыть очередь\n"
@@ -682,6 +900,8 @@ async def status(update: Update, context: ContextTypes.DEFAULT_TYPE):
         f"Telegram-аккаунт подключён: {'да' if connected else 'нет'}\n"
         f"Пользователей: {len(ALLOWED_USER_IDS)}\n"
         f"Каналов в списке: {len(CHANNELS)}\n"
+        f"Сайтов вакансий: {len(WEB_SOURCES)}\n"
+        f"Проверка сайтов: каждые {WEB_SCAN_HOURS} ч.\n"
         f"Интервал проверки: {SCAN_MINUTES} мин.\n"
         f"Максимальный возраст заявки: {MAX_AGE_HOURS} ч.",
     )
@@ -708,6 +928,21 @@ async def scan_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
             f"Старых объявлений пропущено: {result['old']}",
         )
 
+
+
+async def webscan_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    if not is_owner(update):
+        await reply(update, "Доступ закрыт.")
+        return
+    await reply(update, "🌐 Проверяю зарубежные сайты с вакансиями…")
+    result = await scan_websites(context.application)
+    await reply(
+        update,
+        "✅ Проверка сайтов завершена.\n"
+        f"Источников проверено: {result['checked']} из {result['total']}\n"
+        f"Ошибок: {result['errors']}\n"
+        f"Новых подходящих объявлений: {result['found']}",
+    )
 
 async def run_scan(app: Application):
     if not ALLOWED_USER_IDS:
@@ -757,6 +992,12 @@ async def post_init(app: Application):
             first=5,
             name="telegram-channel-search",
         )
+        app.job_queue.run_repeating(
+            scheduled_web_scan,
+            interval=WEB_SCAN_HOURS * 60 * 60,
+            first=30,
+            name="foreign-freelance-sites",
+        )
 
 
 async def post_shutdown(app: Application):
@@ -782,6 +1023,7 @@ def main():
     app.add_handler(CommandHandler("myid", myid))
     app.add_handler(CommandHandler("status", status))
     app.add_handler(CommandHandler("scan", scan_command))
+    app.add_handler(CommandHandler("webscan", webscan_command))
     app.add_handler(CommandHandler("saved", saved_command))
     app.add_handler(CommandHandler("stats", stats_command))
     app.add_handler(CommandHandler("pause", pause_command))
