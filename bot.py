@@ -423,6 +423,26 @@ class _HTMLText(HTMLParser):
             self.parts.append(data.strip())
 
 
+def _repair_mojibake(value):
+    """ÐÐ¾Ð¿ÑÑÐ°ÑÑÑÑ Ð¸ÑÐ¿ÑÐ°Ð²Ð¸ÑÑ ÑÐµÐºÑÑ, ÐµÑÐ»Ð¸ UTF-8 Ð¾ÑÐ¸Ð±Ð¾ÑÐ½Ð¾ Ð¿ÑÐ¾ÑÐ¸ÑÐ°Ð»Ð¸ ÐºÐ°Ðº cp1252/latin-1."""
+    if not isinstance(value, str):
+        return value
+    markers = ("\u00c3", "\u00c2", "\u00d0", "\u00d1", "\u00f0", "\u00de", "\u00e2\u20ac", "\u0420\u045f", "\u0421\u045f")
+    if not any(marker in value for marker in markers):
+        return value
+
+    original_score = sum(value.count(marker) for marker in markers)
+    for encoding in ("cp1252", "latin-1"):
+        try:
+            candidate = value.encode(encoding).decode("utf-8")
+        except (UnicodeEncodeError, UnicodeDecodeError):
+            continue
+        candidate_score = sum(candidate.count(marker) for marker in markers)
+        if candidate_score < original_score:
+            return candidate
+    return value
+
+
 def _plain_text(value):
     parser = _HTMLText()
     try:
@@ -568,8 +588,8 @@ async def scan_websites(app: Application):
             data = await asyncio.to_thread(_fetch_json, url)
             checked += 1
             for item in _extract_web_jobs(source, data):
-                title = str(item.get("title") or "").strip()
-                description = str(item.get("description") or "").strip()
+                title = _repair_mojibake(str(item.get("title") or "")).strip()
+                description = _repair_mojibake(str(item.get("description") or "")).strip()
                 link = str(item.get("url") or "").strip()
                 job_id = str(item.get("id") or link).strip()
                 if not title or not link or not job_id:
@@ -588,10 +608,10 @@ async def scan_websites(app: Application):
                 if was_seen(key):
                     continue
                 body = (
-                    f"ð <b>ÐÐ°ÑÑÐ±ÐµÐ¶Ð½ÑÐ¹ ÑÐ°Ð¹Ñ: {html.escape(source)}</b>\\n"
-                    f"ð¼ <b>{html.escape(title[:300])}</b>\\n"
-                    f"ð¢ {html.escape(str(item.get('company') or 'ÐÐ¾Ð¼Ð¿Ð°Ð½Ð¸Ñ Ð½Ðµ ÑÐºÐ°Ð·Ð°Ð½Ð°')[:200])}\\n\\n"
-                    f"{html.escape(_plain_text(description)[:2200])}\\n\\n"
+                    f"ð <b>ÐÐ°ÑÑÐ±ÐµÐ¶Ð½ÑÐ¹ ÑÐ°Ð¹Ñ: {html.escape(source)}</b>\n"
+                    f"ð¼ <b>{html.escape(title[:300])}</b>\n"
+                    f"ð¢ {html.escape(_repair_mojibake(str(item.get('company') or 'ÐÐ¾Ð¼Ð¿Ð°Ð½Ð¸Ñ Ð½Ðµ ÑÐºÐ°Ð·Ð°Ð½Ð°'))[:200])}\n\n"
+                    f"{html.escape(_plain_text(description)[:2200])}\n\n"
                     f"ð Ð¢ÐµÐ¼Ð°ÑÐ¸ÐºÐ°: {html.escape(', '.join(k for k in WEB_KEYWORDS if k.casefold() in (title + ' ' + _plain_text(description)).casefold())[:500])}"
                 )
                 with db() as con:
@@ -615,7 +635,7 @@ async def scan_websites(app: Application):
                 try:
                     await app.bot.send_message(
                         chat_id=int(user_id),
-                        text=f"ð ÐÐ°Ð¹Ð´ÐµÐ½Ñ Ð½Ð¾Ð²ÑÐµ Ð²Ð°ÐºÐ°Ð½ÑÐ¸Ð¸ Ð½Ð° Ð·Ð°ÑÑÐ±ÐµÐ¶Ð½ÑÑ ÑÐ°Ð¹ÑÐ°Ñ: {found}\\nð ÐÐ¶Ð¸Ð´Ð°ÑÑ Ð¿ÑÐ¾ÑÐ¼Ð¾ÑÑÐ°: {count}",
+                        text=f"ð ÐÐ°Ð¹Ð´ÐµÐ½Ñ Ð½Ð¾Ð²ÑÐµ Ð²Ð°ÐºÐ°Ð½ÑÐ¸Ð¸ Ð½Ð° Ð·Ð°ÑÑÐ±ÐµÐ¶Ð½ÑÑ ÑÐ°Ð¹ÑÐ°Ñ: {found}\nð ÐÐ¶Ð¸Ð´Ð°ÑÑ Ð¿ÑÐ¾ÑÐ¼Ð¾ÑÑÐ°: {count}",
                         reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("ð Ð¡Ð¼Ð¾ÑÑÐµÑÑ Ð·Ð°ÐºÐ°Ð·Ñ", callback_data="queue:open")]]),
                     )
                 except TelegramError as exc:
@@ -716,6 +736,7 @@ async def show_next(query, user_id: str):
         [InlineKeyboardButton("ð·ðº ÐÐµÑÐµÐ²ÐµÑÑÐ¸", callback_data="queue:translate")],
         [InlineKeyboardButton("â¬ï¸ ÐÐ°Ð·Ð°Ð´", callback_data="queue:back")],
     ])
+    text = _repair_mojibake(text)
     await query.edit_message_text(text, parse_mode="HTML", reply_markup=keyboard, disable_web_page_preview=True)
 
 
@@ -739,9 +760,9 @@ async def queue_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if user_id not in ALLOWED_USER_IDS:
         await query.answer("ÐÐ¾ÑÑÑÐ¿ Ð·Ð°ÐºÑÑÑ.", show_alert=True)
         return
-    await query.answer()
     data = query.data or ""
     if data == "queue:translate":
+        await query.answer("ÐÐµÑÐµÐ²Ð¾Ð¶Ñâ¦")
         jobs = pending_jobs(user_id)
         if not jobs:
             await query.answer("ÐÑÐµÑÐµÐ´Ñ Ð¿ÑÑÑÐ°.", show_alert=True)
@@ -751,7 +772,7 @@ async def queue_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
             translated = await asyncio.to_thread(translate_to_russian, body)
             translated = translated[:3500]
             await query.message.reply_text(
-                "ð·ðº <b>ÐÐµÑÐµÐ²Ð¾Ð´ Ð½Ð° ÑÑÑÑÐºÐ¸Ð¹</b>\\n\\n" + html.escape(translated),
+                "ð·ðº <b>ÐÐµÑÐµÐ²Ð¾Ð´ Ð½Ð° ÑÑÑÑÐºÐ¸Ð¹</b>\n\n" + html.escape(translated),
                 parse_mode="HTML", disable_web_page_preview=True,
             )
         except Exception as exc:
@@ -761,9 +782,11 @@ async def queue_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
             )
         return
     if data == "queue:open":
+        await query.answer()
         await show_next(query, user_id)
         return
     if data == "queue:back":
+        await query.answer()
         with db() as con:
             row = con.execute(
                 "SELECT job_key FROM decisions WHERE user_id=? ORDER BY decided_at DESC LIMIT 1",
@@ -775,6 +798,7 @@ async def queue_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await show_next(query, user_id)
         return
     if data in ("queue:skip", "queue:keep"):
+        await query.answer()
         jobs = pending_jobs(user_id)
         if not jobs:
             await query.edit_message_text("ð­ ÐÑÐµÑÐµÐ´Ñ Ð¿ÑÑÑÐ°.", reply_markup=None)
