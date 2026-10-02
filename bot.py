@@ -36,8 +36,8 @@ MAX_MESSAGES_PER_CHANNEL = max(
 MAX_AGE_HOURS = max(1, int(os.getenv("MAX_AGE_HOURS", "24")))
 SEND_DELAY = max(1, int(os.getenv("SEND_DELAY", "2")))
 
-# ÐÐ°ÑÑÐ±ÐµÐ¶Ð½ÑÐµ ÑÐ°Ð¹ÑÑ Ñ Ð¿ÑÐ±Ð»Ð¸ÑÐ½ÑÐ¼Ð¸ API. ÐÑÐ¾Ð²ÐµÑÑÑÑÑÑ Ð¾ÑÐ´ÐµÐ»ÑÐ½Ð¾ Ð¾Ñ Telegram.
-# ÐÐ½ÑÐµÑÐ²Ð°Ð» 6 ÑÐ°ÑÐ¾Ð²: Remotive ÑÐµÐºÐ¾Ð¼ÐµÐ½Ð´ÑÐµÑ Ð½Ðµ Ð±Ð¾Ð»ÐµÐµ 4 Ð·Ð°Ð¿ÑÐ¾ÑÐ¾Ð² Ð² ÑÑÑÐºÐ¸.
+# \u0417\u0430\u0440\u0443\u0431\u0435\u0436\u043d\u044b\u0435 \u0441\u0430\u0439\u0442\u044b \u0441 \u043f\u0443\u0431\u043b\u0438\u0447\u043d\u044b\u043c\u0438 API. \u041f\u0440\u043e\u0432\u0435\u0440\u044f\u044e\u0442\u0441\u044f \u043e\u0442\u0434\u0435\u043b\u044c\u043d\u043e \u043e\u0442 Telegram.
+# \u0418\u043d\u0442\u0435\u0440\u0432\u0430\u043b 6 \u0447\u0430\u0441\u043e\u0432: Remotive \u0440\u0435\u043a\u043e\u043c\u0435\u043d\u0434\u0443\u0435\u0442 \u043d\u0435 \u0431\u043e\u043b\u0435\u0435 4 \u0437\u0430\u043f\u0440\u043e\u0441\u043e\u0432 \u0432 \u0441\u0443\u0442\u043a\u0438.
 WEB_SCAN_HOURS = max(6, int(os.getenv("WEB_SCAN_HOURS", "6")))
 WEB_MAX_AGE_HOURS = max(1, int(os.getenv("WEB_MAX_AGE_HOURS", "72")))
 
@@ -46,14 +46,14 @@ WEB_SOURCES = {
     "Himalayas": "https://himalayas.app/jobs/api?limit=20",
     "Remotive": "https://remotive.com/api/remote-jobs?limit=100",
     "Jobicy": "https://jobicy.com/api/v2/remote-jobs?count=50",
-    # ÐÐ¾Ð¿Ð¾Ð»Ð½Ð¸ÑÐµÐ»ÑÐ½ÑÐµ Ð¾ÑÐºÑÑÑÑÐµ Ð»ÐµÐ½ÑÑ ÑÐ´Ð°Ð»ÑÐ½Ð½ÑÑ Ð²Ð°ÐºÐ°Ð½ÑÐ¸Ð¹
+    # \u0414\u043e\u043f\u043e\u043b\u043d\u0438\u0442\u0435\u043b\u044c\u043d\u044b\u0435 \u043e\u0442\u043a\u0440\u044b\u0442\u044b\u0435 \u043b\u0435\u043d\u0442\u044b \u0443\u0434\u0430\u043b\u0451\u043d\u043d\u044b\u0445 \u0432\u0430\u043a\u0430\u043d\u0441\u0438\u0439
     "RemoteJobs.org": "https://remotejobs.org/api/v1/jobs?limit=50",
     "Career Nest": "https://careernest.cloud/api/feed?limit=100",
     "Arbeitnow": "https://www.arbeitnow.com/api/job-board-api",
     "Remote First Jobs": "https://remotefirstjobs.com/api/search-jobs",
 }
 
-# Ð¦ÐµÐ»ÐµÐ²ÑÐµ Ð½Ð°Ð¿ÑÐ°Ð²Ð»ÐµÐ½Ð¸Ñ: Ð°Ð½Ð¸Ð¼Ð°ÑÐ¸Ñ Ð»Ð¾Ð³Ð¾ÑÐ¸Ð¿Ð¾Ð², ÐºÐ°ÑÑÐ¾ÑÐºÐ¸ ÑÐ¾Ð²Ð°ÑÐ¾Ð² Ð¸ Ð»ÑÐ±ÑÐµ AI-ÑÐ¾Ð»Ð¸.
+# \u0426\u0435\u043b\u0435\u0432\u044b\u0435 \u043d\u0430\u043f\u0440\u0430\u0432\u043b\u0435\u043d\u0438\u044f: \u0430\u043d\u0438\u043c\u0430\u0446\u0438\u044f \u043b\u043e\u0433\u043e\u0442\u0438\u043f\u043e\u0432, \u043a\u0430\u0440\u0442\u043e\u0447\u043a\u0438 \u0442\u043e\u0432\u0430\u0440\u043e\u0432 \u0438 \u043b\u044e\u0431\u044b\u0435 AI-\u0440\u043e\u043b\u0438.
 WEB_KEYWORDS = [
     "logo animation", "animated logo", "animate logo", "motion graphics",
     "motion designer", "logo animator", "brand animation",
@@ -111,56 +111,56 @@ CHANNELS = [
     '@udafrii',
     '@FreeWorkFeed',
     '@workk_on',
-    # ÐÐ°ÑÑÐ±ÐµÐ¶Ð½ÑÐµ ÐºÐ°Ð½Ð°Ð»Ñ (Ð°Ð½Ð³Ð»Ð¸Ð¹ÑÐºÐ¸Ð¹/Ð¸ÑÐ¿Ð°Ð½ÑÐºÐ¸Ð¹)
+    # \u0417\u0430\u0440\u0443\u0431\u0435\u0436\u043d\u044b\u0435 \u043a\u0430\u043d\u0430\u043b\u044b (\u0430\u043d\u0433\u043b\u0438\u0439\u0441\u043a\u0438\u0439/\u0438\u0441\u043f\u0430\u043d\u0441\u043a\u0438\u0439)
     '@remotegraphicdesignjobs',
     '@findmyremote_design',
 ]
-# Ð¡ÑÑÐ¾Ð³Ð¸Ð¹ ÑÐ¸Ð»ÑÑÑ: Ð¿ÑÐ¾Ð¿ÑÑÐºÐ°ÐµÐ¼ ÑÐ¾Ð»ÑÐºÐ¾ ÑÐ²Ð½ÑÐ¹ Ð¿Ð¾Ð¸ÑÐº Ð¸ÑÐ¿Ð¾Ð»Ð½Ð¸ÑÐµÐ»Ñ/Ð´Ð¸Ð·Ð°Ð¹Ð½ÐµÑÐ°.
-# ÐÐ±ÑÐ¸Ðµ ÑÐ»Ð¾Ð²Ð° Ð²ÑÐ¾Ð´Ðµ Â«Ð¸Ð½ÑÐ¾Ð³ÑÐ°ÑÐ¸ÐºÐ°Â», Â«WBÂ» Ð¸ Â«ÐºÐ°ÑÑÐ¾ÑÐºÐ¸Â» ÑÐ°Ð¼Ð¸ Ð¿Ð¾ ÑÐµÐ±Ðµ Ð½Ðµ Ð¿Ð¾Ð´ÑÐ¾Ð´ÑÑ.
+# \u0421\u0442\u0440\u043e\u0433\u0438\u0439 \u0444\u0438\u043b\u044c\u0442\u0440: \u043f\u0440\u043e\u043f\u0443\u0441\u043a\u0430\u0435\u043c \u0442\u043e\u043b\u044c\u043a\u043e \u044f\u0432\u043d\u044b\u0439 \u043f\u043e\u0438\u0441\u043a \u0438\u0441\u043f\u043e\u043b\u043d\u0438\u0442\u0435\u043b\u044f/\u0434\u0438\u0437\u0430\u0439\u043d\u0435\u0440\u0430.
+# \u041e\u0431\u0449\u0438\u0435 \u0441\u043b\u043e\u0432\u0430 \u0432\u0440\u043e\u0434\u0435 \u00ab\u0438\u043d\u0444\u043e\u0433\u0440\u0430\u0444\u0438\u043a\u0430\u00bb, \u00abWB\u00bb \u0438 \u00ab\u043a\u0430\u0440\u0442\u043e\u0447\u043a\u0438\u00bb \u0441\u0430\u043c\u0438 \u043f\u043e \u0441\u0435\u0431\u0435 \u043d\u0435 \u043f\u043e\u0434\u0445\u043e\u0434\u044f\u0442.
 POSITIVE = [
-    "Ð¸ÑÑ Ð´Ð¸Ð·Ð°Ð¹Ð½ÐµÑÐ°",
-    "Ð¸ÑÐµÐ¼ Ð´Ð¸Ð·Ð°Ð¹Ð½ÐµÑÐ°",
-    "Ð½ÑÐ¶ÐµÐ½ Ð´Ð¸Ð·Ð°Ð¹Ð½ÐµÑ",
-    "Ð½ÑÐ¶Ð½Ð° Ð´Ð¸Ð·Ð°Ð¹Ð½ÐµÑ",
-    "Ð½ÑÐ¶ÐµÐ½ Ð´Ð¸Ð·Ð°Ð¹Ð½ÐµÑ ÐºÐ°ÑÑÐ¾ÑÐµÐº",
-    "ÑÑÐµÐ±ÑÐµÑÑÑ Ð´Ð¸Ð·Ð°Ð¹Ð½ÐµÑ",
-    "ÑÑÐµÐ±ÑÐµÑÑÑ Ð´Ð¸Ð·Ð°Ð¹Ð½ÐµÑ ÐºÐ°ÑÑÐ¾ÑÐµÐº",
-    "Ð¸ÑÑ Ð´Ð¸Ð·Ð°Ð¹Ð½ÐµÑÐ° ÐºÐ°ÑÑÐ¾ÑÐµÐº",
-    "Ð¸ÑÐµÐ¼ Ð´Ð¸Ð·Ð°Ð¹Ð½ÐµÑÐ° ÐºÐ°ÑÑÐ¾ÑÐµÐº",
-    "Ð¸ÑÑ Ð¸Ð½ÑÐ¾Ð³ÑÐ°ÑÐ¸ÑÑÐ°",
-    "Ð¸ÑÐµÐ¼ Ð¸Ð½ÑÐ¾Ð³ÑÐ°ÑÐ¸ÑÑÐ°",
-    "Ð½ÑÐ¶ÐµÐ½ Ð¸Ð½ÑÐ¾Ð³ÑÐ°ÑÐ¸ÑÑ",
-    "Ð½ÑÐ¶Ð½Ð° Ð¸Ð½ÑÐ¾Ð³ÑÐ°ÑÐ¸ÑÑ",
-    "ÑÑÐµÐ±ÑÐµÑÑÑ Ð¸Ð½ÑÐ¾Ð³ÑÐ°ÑÐ¸ÑÑ",
-    "Ð¸ÑÑ Ð¸ÑÐ¿Ð¾Ð»Ð½Ð¸ÑÐµÐ»Ñ",
-    "Ð¸ÑÐµÐ¼ Ð¸ÑÐ¿Ð¾Ð»Ð½Ð¸ÑÐµÐ»Ñ",
-    "Ð½ÑÐ¶ÐµÐ½ Ð¸ÑÐ¿Ð¾Ð»Ð½Ð¸ÑÐµÐ»Ñ",
-    "Ð½ÑÐ¶Ð½Ð° Ð¸ÑÐ¿Ð¾Ð»Ð½Ð¸ÑÐµÐ»Ñ",
-    "ÑÑÐµÐ±ÑÐµÑÑÑ Ð¸ÑÐ¿Ð¾Ð»Ð½Ð¸ÑÐµÐ»Ñ",
-    "Ð¸ÑÑ ÑÐ¿ÐµÑÐ¸Ð°Ð»Ð¸ÑÑÐ° Ð¿Ð¾ Ð´Ð¸Ð·Ð°Ð¹Ð½Ñ",
-    "Ð¸ÑÐµÐ¼ ÑÐ¿ÐµÑÐ¸Ð°Ð»Ð¸ÑÑÐ° Ð¿Ð¾ Ð´Ð¸Ð·Ð°Ð¹Ð½Ñ",
-    "Ð½ÑÐ¶ÐµÐ½ ÑÐ¿ÐµÑÐ¸Ð°Ð»Ð¸ÑÑ Ð¿Ð¾ Ð´Ð¸Ð·Ð°Ð¹Ð½Ñ",
-    "Ð½ÑÐ¶ÐµÐ½ Ð´Ð¸Ð·Ð°Ð¹Ð½ÐµÑ Ð´Ð»Ñ",
-    "Ð½ÑÐ¶Ð½Ð° Ð´Ð¸Ð·Ð°Ð¹Ð½ÐµÑ Ð´Ð»Ñ",
-    "Ð·Ð°ÐºÐ°Ð· Ð½Ð° Ð´Ð¸Ð·Ð°Ð¹Ð½",
-    "ÐµÑÑÑ Ð·Ð°ÐºÐ°Ð· Ð½Ð° Ð´Ð¸Ð·Ð°Ð¹Ð½",
-    "Ð¸ÑÑ ÑÐµÐ»Ð¾Ð²ÐµÐºÐ° Ð´Ð»Ñ Ð´Ð¸Ð·Ð°Ð¹Ð½Ð°",
-    # ÐÐ¾Ð³Ð¾ÑÐ¸Ð¿Ñ, Ð±Ð°Ð½Ð½ÐµÑÑ Ð¸ ÑÐ¸ÑÐ¼ÐµÐ½Ð½ÑÐ¹ ÑÑÐ¸Ð»Ñ (ÑÑÑÑÐºÐ¸Ð¹)
-    "Ð¸ÑÑ Ð´Ð¸Ð·Ð°Ð¹Ð½ÐµÑÐ° Ð»Ð¾Ð³Ð¾ÑÐ¸Ð¿Ð°",
-    "Ð¸ÑÐµÐ¼ Ð´Ð¸Ð·Ð°Ð¹Ð½ÐµÑÐ° Ð»Ð¾Ð³Ð¾ÑÐ¸Ð¿Ð°",
-    "Ð½ÑÐ¶ÐµÐ½ Ð´Ð¸Ð·Ð°Ð¹Ð½ÐµÑ Ð»Ð¾Ð³Ð¾ÑÐ¸Ð¿Ð°",
-    "Ð½ÑÐ¶ÐµÐ½ Ð´Ð¸Ð·Ð°Ð¹Ð½ÐµÑ Ð´Ð»Ñ Ð»Ð¾Ð³Ð¾ÑÐ¸Ð¿Ð°",
-    "Ð·Ð°ÐºÐ°Ð·Ð°ÑÑ Ð»Ð¾Ð³Ð¾ÑÐ¸Ð¿",
-    "Ð·Ð°ÐºÐ°Ð· Ð½Ð° Ð»Ð¾Ð³Ð¾ÑÐ¸Ð¿",
-    "Ð¸ÑÑ Ð´Ð¸Ð·Ð°Ð¹Ð½ÐµÑÐ° Ð±Ð°Ð½Ð½ÐµÑÐ¾Ð²",
-    "Ð¸ÑÐµÐ¼ Ð´Ð¸Ð·Ð°Ð¹Ð½ÐµÑÐ° Ð±Ð°Ð½Ð½ÐµÑÐ¾Ð²",
-    "Ð½ÑÐ¶ÐµÐ½ Ð´Ð¸Ð·Ð°Ð¹Ð½ÐµÑ Ð±Ð°Ð½Ð½ÐµÑÐ¾Ð²",
-    "Ð½ÑÐ¶ÐµÐ½ Ð´Ð¸Ð·Ð°Ð¹Ð½ÐµÑ Ð´Ð»Ñ Ð±Ð°Ð½Ð½ÐµÑÐ°",
-    "Ð·Ð°ÐºÐ°Ð·Ð°ÑÑ Ð±Ð°Ð½Ð½ÐµÑ",
-    "Ð·Ð°ÐºÐ°Ð· Ð½Ð° Ð±Ð°Ð½Ð½ÐµÑ",
-    "Ð¸ÑÑ Ð´Ð¸Ð·Ð°Ð¹Ð½ÐµÑÐ° ÑÐ¸ÑÐ¼ÐµÐ½Ð½Ð¾Ð³Ð¾ ÑÑÐ¸Ð»Ñ",
-    "Ð½ÑÐ¶ÐµÐ½ Ð´Ð¸Ð·Ð°Ð¹Ð½ÐµÑ ÑÐ¸ÑÐ¼ÐµÐ½Ð½Ð¾Ð³Ð¾ ÑÑÐ¸Ð»Ñ",
-    # ÐÐ½Ð³Ð»Ð¸Ð¹ÑÐºÐ¸Ðµ ÑÐ¾ÑÐ¼ÑÐ»Ð¸ÑÐ¾Ð²ÐºÐ¸ Ð·Ð°ÐºÐ°Ð·Ð¾Ð² Ð² Ð·Ð°ÑÑÐ±ÐµÐ¶Ð½ÑÑ ÐºÐ°Ð½Ð°Ð»Ð°Ñ
+    "\u0438\u0449\u0443 \u0434\u0438\u0437\u0430\u0439\u043d\u0435\u0440\u0430",
+    "\u0438\u0449\u0435\u043c \u0434\u0438\u0437\u0430\u0439\u043d\u0435\u0440\u0430",
+    "\u043d\u0443\u0436\u0435\u043d \u0434\u0438\u0437\u0430\u0439\u043d\u0435\u0440",
+    "\u043d\u0443\u0436\u043d\u0430 \u0434\u0438\u0437\u0430\u0439\u043d\u0435\u0440",
+    "\u043d\u0443\u0436\u0435\u043d \u0434\u0438\u0437\u0430\u0439\u043d\u0435\u0440 \u043a\u0430\u0440\u0442\u043e\u0447\u0435\u043a",
+    "\u0442\u0440\u0435\u0431\u0443\u0435\u0442\u0441\u044f \u0434\u0438\u0437\u0430\u0439\u043d\u0435\u0440",
+    "\u0442\u0440\u0435\u0431\u0443\u0435\u0442\u0441\u044f \u0434\u0438\u0437\u0430\u0439\u043d\u0435\u0440 \u043a\u0430\u0440\u0442\u043e\u0447\u0435\u043a",
+    "\u0438\u0449\u0443 \u0434\u0438\u0437\u0430\u0439\u043d\u0435\u0440\u0430 \u043a\u0430\u0440\u0442\u043e\u0447\u0435\u043a",
+    "\u0438\u0449\u0435\u043c \u0434\u0438\u0437\u0430\u0439\u043d\u0435\u0440\u0430 \u043a\u0430\u0440\u0442\u043e\u0447\u0435\u043a",
+    "\u0438\u0449\u0443 \u0438\u043d\u0444\u043e\u0433\u0440\u0430\u0444\u0438\u0441\u0442\u0430",
+    "\u0438\u0449\u0435\u043c \u0438\u043d\u0444\u043e\u0433\u0440\u0430\u0444\u0438\u0441\u0442\u0430",
+    "\u043d\u0443\u0436\u0435\u043d \u0438\u043d\u0444\u043e\u0433\u0440\u0430\u0444\u0438\u0441\u0442",
+    "\u043d\u0443\u0436\u043d\u0430 \u0438\u043d\u0444\u043e\u0433\u0440\u0430\u0444\u0438\u0441\u0442",
+    "\u0442\u0440\u0435\u0431\u0443\u0435\u0442\u0441\u044f \u0438\u043d\u0444\u043e\u0433\u0440\u0430\u0444\u0438\u0441\u0442",
+    "\u0438\u0449\u0443 \u0438\u0441\u043f\u043e\u043b\u043d\u0438\u0442\u0435\u043b\u044f",
+    "\u0438\u0449\u0435\u043c \u0438\u0441\u043f\u043e\u043b\u043d\u0438\u0442\u0435\u043b\u044f",
+    "\u043d\u0443\u0436\u0435\u043d \u0438\u0441\u043f\u043e\u043b\u043d\u0438\u0442\u0435\u043b\u044c",
+    "\u043d\u0443\u0436\u043d\u0430 \u0438\u0441\u043f\u043e\u043b\u043d\u0438\u0442\u0435\u043b\u044c",
+    "\u0442\u0440\u0435\u0431\u0443\u0435\u0442\u0441\u044f \u0438\u0441\u043f\u043e\u043b\u043d\u0438\u0442\u0435\u043b\u044c",
+    "\u0438\u0449\u0443 \u0441\u043f\u0435\u0446\u0438\u0430\u043b\u0438\u0441\u0442\u0430 \u043f\u043e \u0434\u0438\u0437\u0430\u0439\u043d\u0443",
+    "\u0438\u0449\u0435\u043c \u0441\u043f\u0435\u0446\u0438\u0430\u043b\u0438\u0441\u0442\u0430 \u043f\u043e \u0434\u0438\u0437\u0430\u0439\u043d\u0443",
+    "\u043d\u0443\u0436\u0435\u043d \u0441\u043f\u0435\u0446\u0438\u0430\u043b\u0438\u0441\u0442 \u043f\u043e \u0434\u0438\u0437\u0430\u0439\u043d\u0443",
+    "\u043d\u0443\u0436\u0435\u043d \u0434\u0438\u0437\u0430\u0439\u043d\u0435\u0440 \u0434\u043b\u044f",
+    "\u043d\u0443\u0436\u043d\u0430 \u0434\u0438\u0437\u0430\u0439\u043d\u0435\u0440 \u0434\u043b\u044f",
+    "\u0437\u0430\u043a\u0430\u0437 \u043d\u0430 \u0434\u0438\u0437\u0430\u0439\u043d",
+    "\u0435\u0441\u0442\u044c \u0437\u0430\u043a\u0430\u0437 \u043d\u0430 \u0434\u0438\u0437\u0430\u0439\u043d",
+    "\u0438\u0449\u0443 \u0447\u0435\u043b\u043e\u0432\u0435\u043a\u0430 \u0434\u043b\u044f \u0434\u0438\u0437\u0430\u0439\u043d\u0430",
+    # \u041b\u043e\u0433\u043e\u0442\u0438\u043f\u044b, \u0431\u0430\u043d\u043d\u0435\u0440\u044b \u0438 \u0444\u0438\u0440\u043c\u0435\u043d\u043d\u044b\u0439 \u0441\u0442\u0438\u043b\u044c (\u0440\u0443\u0441\u0441\u043a\u0438\u0439)
+    "\u0438\u0449\u0443 \u0434\u0438\u0437\u0430\u0439\u043d\u0435\u0440\u0430 \u043b\u043e\u0433\u043e\u0442\u0438\u043f\u0430",
+    "\u0438\u0449\u0435\u043c \u0434\u0438\u0437\u0430\u0439\u043d\u0435\u0440\u0430 \u043b\u043e\u0433\u043e\u0442\u0438\u043f\u0430",
+    "\u043d\u0443\u0436\u0435\u043d \u0434\u0438\u0437\u0430\u0439\u043d\u0435\u0440 \u043b\u043e\u0433\u043e\u0442\u0438\u043f\u0430",
+    "\u043d\u0443\u0436\u0435\u043d \u0434\u0438\u0437\u0430\u0439\u043d\u0435\u0440 \u0434\u043b\u044f \u043b\u043e\u0433\u043e\u0442\u0438\u043f\u0430",
+    "\u0437\u0430\u043a\u0430\u0437\u0430\u0442\u044c \u043b\u043e\u0433\u043e\u0442\u0438\u043f",
+    "\u0437\u0430\u043a\u0430\u0437 \u043d\u0430 \u043b\u043e\u0433\u043e\u0442\u0438\u043f",
+    "\u0438\u0449\u0443 \u0434\u0438\u0437\u0430\u0439\u043d\u0435\u0440\u0430 \u0431\u0430\u043d\u043d\u0435\u0440\u043e\u0432",
+    "\u0438\u0449\u0435\u043c \u0434\u0438\u0437\u0430\u0439\u043d\u0435\u0440\u0430 \u0431\u0430\u043d\u043d\u0435\u0440\u043e\u0432",
+    "\u043d\u0443\u0436\u0435\u043d \u0434\u0438\u0437\u0430\u0439\u043d\u0435\u0440 \u0431\u0430\u043d\u043d\u0435\u0440\u043e\u0432",
+    "\u043d\u0443\u0436\u0435\u043d \u0434\u0438\u0437\u0430\u0439\u043d\u0435\u0440 \u0434\u043b\u044f \u0431\u0430\u043d\u043d\u0435\u0440\u0430",
+    "\u0437\u0430\u043a\u0430\u0437\u0430\u0442\u044c \u0431\u0430\u043d\u043d\u0435\u0440",
+    "\u0437\u0430\u043a\u0430\u0437 \u043d\u0430 \u0431\u0430\u043d\u043d\u0435\u0440",
+    "\u0438\u0449\u0443 \u0434\u0438\u0437\u0430\u0439\u043d\u0435\u0440\u0430 \u0444\u0438\u0440\u043c\u0435\u043d\u043d\u043e\u0433\u043e \u0441\u0442\u0438\u043b\u044f",
+    "\u043d\u0443\u0436\u0435\u043d \u0434\u0438\u0437\u0430\u0439\u043d\u0435\u0440 \u0444\u0438\u0440\u043c\u0435\u043d\u043d\u043e\u0433\u043e \u0441\u0442\u0438\u043b\u044f",
+    # \u0410\u043d\u0433\u043b\u0438\u0439\u0441\u043a\u0438\u0435 \u0444\u043e\u0440\u043c\u0443\u043b\u0438\u0440\u043e\u0432\u043a\u0438 \u0437\u0430\u043a\u0430\u0437\u043e\u0432 \u0432 \u0437\u0430\u0440\u0443\u0431\u0435\u0436\u043d\u044b\u0445 \u043a\u0430\u043d\u0430\u043b\u0430\u0445
     "looking for a designer",
     "looking for graphic designer",
     "looking for a graphic designer",
@@ -183,26 +183,26 @@ POSITIVE = [
 ]
 
 NEGATIVE = [
-    "Ð¿ÑÐµÐ´Ð»Ð°Ð³Ð°Ñ ÑÑÐ»ÑÐ³Ð¸",
-    "Ð¾ÐºÐ°Ð·ÑÐ²Ð°Ñ ÑÑÐ»ÑÐ³Ð¸",
-    "Ð¼Ð¾Ð¸ ÑÑÐ»ÑÐ³Ð¸",
-    "ÑÑÐ»ÑÐ³Ð¸ Ð´Ð¸Ð·Ð°Ð¹Ð½ÐµÑÐ°",
-    "Ñ Ð´Ð¸Ð·Ð°Ð¹Ð½ÐµÑ",
-    "Ð´Ð¸Ð·Ð°Ð¹Ð½ÐµÑ Ð½Ð° ÑÐ²ÑÐ·Ð¸",
-    "Ð¸ÑÑ ÑÐ°Ð±Ð¾ÑÑ",
-    "Ð¸ÑÑ Ð·Ð°ÐºÐ°Ð·Ñ",
-    "Ð¸ÑÑ Ð·Ð°ÐºÐ°Ð·ÑÐ¸ÐºÐ¾Ð²",
-    "Ð¸ÑÑ ÐºÐ»Ð¸ÐµÐ½ÑÐ¾Ð²",
-    "Ð¸ÑÑ Ð¿ÑÐ¾ÐµÐºÑÑ",
-    "Ð²Ð¾Ð·ÑÐ¼Ñ Ð·Ð°ÐºÐ°Ð·",
-    "Ð²Ð¾Ð·ÑÐ¼Ñ Ð·Ð°ÐºÐ°Ð·Ñ",
-    "ÑÐ²Ð¾Ð±Ð¾Ð´ÐµÐ½ Ð´Ð»Ñ Ð·Ð°ÐºÐ°Ð·Ð¾Ð²",
-    "ÑÐ²Ð¾Ð±Ð¾Ð´Ð½Ð° Ð´Ð»Ñ Ð·Ð°ÐºÐ°Ð·Ð¾Ð²",
-    "Ð¿Ð¾ÑÑÑÐ¾Ð»Ð¸Ð¾",
-    "Ð¾Ð±ÑÑÐµÐ½Ð¸Ðµ",
-    "ÐºÑÑÑ",
-    "Ð²ÐµÐ±Ð¸Ð½Ð°Ñ",
-    # ÐÐ½Ð³Ð»Ð¾ÑÐ·ÑÑÐ½Ð°Ñ ÑÐ°Ð¼Ð¾ÑÐµÐºÐ»Ð°Ð¼Ð° Ð¸ Ð¿Ð¾Ð¸ÑÐº Ð·Ð°ÐºÐ°Ð·Ð¾Ð² ÑÐ°Ð¼Ð¸Ð¼ Ð¸ÑÐ¿Ð¾Ð»Ð½Ð¸ÑÐµÐ»ÐµÐ¼
+    "\u043f\u0440\u0435\u0434\u043b\u0430\u0433\u0430\u044e \u0443\u0441\u043b\u0443\u0433\u0438",
+    "\u043e\u043a\u0430\u0437\u044b\u0432\u0430\u044e \u0443\u0441\u043b\u0443\u0433\u0438",
+    "\u043c\u043e\u0438 \u0443\u0441\u043b\u0443\u0433\u0438",
+    "\u0443\u0441\u043b\u0443\u0433\u0438 \u0434\u0438\u0437\u0430\u0439\u043d\u0435\u0440\u0430",
+    "\u044f \u0434\u0438\u0437\u0430\u0439\u043d\u0435\u0440",
+    "\u0434\u0438\u0437\u0430\u0439\u043d\u0435\u0440 \u043d\u0430 \u0441\u0432\u044f\u0437\u0438",
+    "\u0438\u0449\u0443 \u0440\u0430\u0431\u043e\u0442\u0443",
+    "\u0438\u0449\u0443 \u0437\u0430\u043a\u0430\u0437\u044b",
+    "\u0438\u0449\u0443 \u0437\u0430\u043a\u0430\u0437\u0447\u0438\u043a\u043e\u0432",
+    "\u0438\u0449\u0443 \u043a\u043b\u0438\u0435\u043d\u0442\u043e\u0432",
+    "\u0438\u0449\u0443 \u043f\u0440\u043e\u0435\u043a\u0442\u044b",
+    "\u0432\u043e\u0437\u044c\u043c\u0443 \u0437\u0430\u043a\u0430\u0437",
+    "\u0432\u043e\u0437\u044c\u043c\u0443 \u0437\u0430\u043a\u0430\u0437\u044b",
+    "\u0441\u0432\u043e\u0431\u043e\u0434\u0435\u043d \u0434\u043b\u044f \u0437\u0430\u043a\u0430\u0437\u043e\u0432",
+    "\u0441\u0432\u043e\u0431\u043e\u0434\u043d\u0430 \u0434\u043b\u044f \u0437\u0430\u043a\u0430\u0437\u043e\u0432",
+    "\u043f\u043e\u0440\u0442\u0444\u043e\u043b\u0438\u043e",
+    "\u043e\u0431\u0443\u0447\u0435\u043d\u0438\u0435",
+    "\u043a\u0443\u0440\u0441",
+    "\u0432\u0435\u0431\u0438\u043d\u0430\u0440",
+    # \u0410\u043d\u0433\u043b\u043e\u044f\u0437\u044b\u0447\u043d\u0430\u044f \u0441\u0430\u043c\u043e\u0440\u0435\u043a\u043b\u0430\u043c\u0430 \u0438 \u043f\u043e\u0438\u0441\u043a \u0437\u0430\u043a\u0430\u0437\u043e\u0432 \u0441\u0430\u043c\u0438\u043c \u0438\u0441\u043f\u043e\u043b\u043d\u0438\u0442\u0435\u043b\u0435\u043c
     "i am a designer",
     "i'm a designer",
     "my portfolio",
@@ -264,11 +264,11 @@ async def reply(update: Update, text: str):
 
 
 def is_relevant(text: str) -> bool:
-    normalized = re.sub(r"\s+", " ", text.lower().replace("Ñ", "Ðµ"))
-    # Ð¡Ð½Ð°ÑÐ°Ð»Ð° Ð¾ÑÑÐµÐºÐ°ÐµÐ¼ ÑÐ°Ð¼Ð¾ÑÐµÐºÐ»Ð°Ð¼Ñ Ð¸ Ð¿ÑÐµÐ´Ð»Ð¾Ð¶ÐµÐ½Ð¸Ñ ÑÑÐ»ÑÐ³.
+    normalized = re.sub(r"\s+", " ", text.lower().replace("\u0451", "\u0435"))
+    # \u0421\u043d\u0430\u0447\u0430\u043b\u0430 \u043e\u0442\u0441\u0435\u043a\u0430\u0435\u043c \u0441\u0430\u043c\u043e\u0440\u0435\u043a\u043b\u0430\u043c\u0443 \u0438 \u043f\u0440\u0435\u0434\u043b\u043e\u0436\u0435\u043d\u0438\u044f \u0443\u0441\u043b\u0443\u0433.
     if any(word in normalized for word in NEGATIVE):
         return False
-    # Ð¢ÑÐµÐ±ÑÐµÐ¼ ÑÐ²Ð½ÑÑ ÑÐ¾ÑÐ¼ÑÐ»Ð¸ÑÐ¾Ð²ÐºÑ, ÑÑÐ¾ Ð°Ð²ÑÐ¾Ñ Ð¸ÑÐµÑ Ð¸ÑÐ¿Ð¾Ð»Ð½Ð¸ÑÐµÐ»Ñ.
+    # \u0422\u0440\u0435\u0431\u0443\u0435\u043c \u044f\u0432\u043d\u0443\u044e \u0444\u043e\u0440\u043c\u0443\u043b\u0438\u0440\u043e\u0432\u043a\u0443, \u0447\u0442\u043e \u0430\u0432\u0442\u043e\u0440 \u0438\u0449\u0435\u0442 \u0438\u0441\u043f\u043e\u043b\u043d\u0438\u0442\u0435\u043b\u044f.
     return any(word in normalized for word in POSITIVE)
 
 
@@ -397,8 +397,8 @@ async def scan_channels(app: Application):
                 try:
                     await app.bot.send_message(
                         chat_id=int(user_id),
-                        text=f"ð ÐÐ°Ð¹Ð´ÐµÐ½Ð¾ Ð½Ð¾Ð²ÑÑ Ð·Ð°ÐºÐ°Ð·Ð¾Ð²: {found}\nð Ð£ ÑÐµÐ±Ñ Ð¾Ð¶Ð¸Ð´Ð°ÑÑ Ð¿ÑÐ¾ÑÐ¼Ð¾ÑÑÐ°: {count}",
-                        reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("ð Ð¡Ð¼Ð¾ÑÑÐµÑÑ Ð·Ð°ÐºÐ°Ð·Ñ", callback_data="queue:open")]]),
+                        text=f"\U0001f195 \u041d\u0430\u0439\u0434\u0435\u043d\u043e \u043d\u043e\u0432\u044b\u0445 \u0437\u0430\u043a\u0430\u0437\u043e\u0432: {found}\n\U0001f4cb \u0423 \u0442\u0435\u0431\u044f \u043e\u0436\u0438\u0434\u0430\u044e\u0442 \u043f\u0440\u043e\u0441\u043c\u043e\u0442\u0440\u0430: {count}",
+                        reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("\U0001f440 \u0421\u043c\u043e\u0442\u0440\u0435\u0442\u044c \u0437\u0430\u043a\u0430\u0437\u044b", callback_data="queue:open")]]),
                     )
                 except TelegramError as exc:
                     log.warning("Queue notice failed for %s: %s", user_id, type(exc).__name__)
@@ -423,24 +423,53 @@ class _HTMLText(HTMLParser):
             self.parts.append(data.strip())
 
 
+def _has_mojibake(value):
+    """\u041e\u043f\u0440\u0435\u0434\u0435\u043b\u044f\u0435\u0442 \u0440\u0430\u0441\u043f\u0440\u043e\u0441\u0442\u0440\u0430\u043d\u0451\u043d\u043d\u044b\u0435 \u0441\u043b\u0435\u0434\u044b \u043d\u0435\u0432\u0435\u0440\u043d\u043e\u0439 \u0434\u0435\u043a\u043e\u0434\u0438\u0440\u043e\u0432\u043a\u0438 \u0442\u0435\u043a\u0441\u0442\u0430."""
+    if not isinstance(value, str):
+        return False
+    markers = (
+        "\u00c3", "\u00c2", "\u00d0", "\u00d1", "\u00f0",
+        "\u00de", "\u00e2\u20ac", "\u0420\u045f", "\u0421\u045f",
+    )
+    return any(marker in value for marker in markers)
+
+
 def _repair_mojibake(value):
-    """ÐÐ¾Ð¿ÑÑÐ°ÑÑÑÑ Ð¸ÑÐ¿ÑÐ°Ð²Ð¸ÑÑ ÑÐµÐºÑÑ, ÐµÑÐ»Ð¸ UTF-8 Ð¾ÑÐ¸Ð±Ð¾ÑÐ½Ð¾ Ð¿ÑÐ¾ÑÐ¸ÑÐ°Ð»Ð¸ ÐºÐ°Ðº cp1252/latin-1."""
+    """\u0418\u0441\u043f\u0440\u0430\u0432\u043b\u044f\u0435\u0442 \u0440\u0430\u0441\u043f\u0440\u043e\u0441\u0442\u0440\u0430\u043d\u0451\u043d\u043d\u0443\u044e \u043e\u0448\u0438\u0431\u043a\u0443, \u043a\u043e\u0433\u0434\u0430 UTF-8 \u043f\u0440\u043e\u0447\u0438\u0442\u0430\u043d \u043a\u0430\u043a legacy-\u043a\u043e\u0434\u0438\u0440\u043e\u0432\u043a\u0430."""
     if not isinstance(value, str):
         return value
-    markers = ("\u00c3", "\u00c2", "\u00d0", "\u00d1", "\u00f0", "\u00de", "\u00e2\u20ac", "\u0420\u045f", "\u0421\u045f")
-    if not any(marker in value for marker in markers):
-        return value
 
-    original_score = sum(value.count(marker) for marker in markers)
-    for encoding in ("cp1252", "latin-1"):
-        try:
-            candidate = value.encode(encoding).decode("utf-8")
-        except (UnicodeEncodeError, UnicodeDecodeError):
-            continue
-        candidate_score = sum(candidate.count(marker) for marker in markers)
-        if candidate_score < original_score:
-            return candidate
-    return value
+    # \u0418\u043d\u043e\u0433\u0434\u0430 \u0442\u0435\u043a\u0441\u0442 \u0431\u044b\u043b \u0438\u0441\u043f\u043e\u0440\u0447\u0435\u043d \u0431\u043e\u043b\u044c\u0448\u0435 \u043e\u0434\u043d\u043e\u0433\u043e \u0440\u0430\u0437\u0430, \u043f\u043e\u044d\u0442\u043e\u043c\u0443 \u043f\u0440\u043e\u0431\u0443\u0435\u043c \u043d\u0435\u0441\u043a\u043e\u043b\u044c\u043a\u043e \u043f\u0440\u043e\u0445\u043e\u0434\u043e\u0432.
+    current = value
+    for _ in range(3):
+        if not _has_mojibake(current):
+            break
+        candidates = []
+        for encoding in ("cp1252", "latin-1", "cp1251"):
+            try:
+                candidate = current.encode(encoding).decode("utf-8")
+            except (UnicodeEncodeError, UnicodeDecodeError):
+                continue
+            if candidate != current:
+                candidates.append(candidate)
+        if not candidates:
+            break
+        # \u0412\u044b\u0431\u0438\u0440\u0430\u0435\u043c \u043f\u0440\u0435\u043e\u0431\u0440\u0430\u0437\u043e\u0432\u0430\u043d\u0438\u0435, \u043f\u043e\u0441\u043b\u0435 \u043a\u043e\u0442\u043e\u0440\u043e\u0433\u043e \u043e\u0441\u0442\u0430\u043b\u043e\u0441\u044c \u043c\u0435\u043d\u044c\u0448\u0435 \u043c\u0430\u0440\u043a\u0435\u0440\u043e\u0432.
+        current = min(candidates, key=lambda item: sum(
+            item.count(marker) for marker in (
+                "\u00c3", "\u00c2", "\u00d0", "\u00d1", "\u00f0",
+                "\u00de", "\u00e2\u20ac", "\u0420\u045f", "\u0421\u045f",
+            )
+        ))
+    return current
+
+
+def _safe_job_body(body):
+    """\u041d\u0435 \u043f\u043e\u043a\u0430\u0437\u044b\u0432\u0430\u0435\u0442 \u043f\u043e\u043b\u044c\u0437\u043e\u0432\u0430\u0442\u0435\u043b\u044e \u043d\u0435\u0447\u0438\u0442\u0430\u0435\u043c\u044b\u0439 \u0442\u0435\u043a\u0441\u0442 \u0438\u0437 \u0441\u0442\u0430\u0440\u044b\u0445 \u0437\u0430\u043f\u0438\u0441\u0435\u0439 \u0431\u0430\u0437\u044b."""
+    repaired = _repair_mojibake(body or "")
+    if _has_mojibake(repaired):
+        return "\u26a0\ufe0f \u0422\u0435\u043a\u0441\u0442 \u043e\u0431\u044a\u044f\u0432\u043b\u0435\u043d\u0438\u044f \u043f\u043e\u043b\u0443\u0447\u0435\u043d \u0432 \u043f\u043e\u0432\u0440\u0435\u0436\u0434\u0451\u043d\u043d\u043e\u0439 \u043a\u043e\u0434\u0438\u0440\u043e\u0432\u043a\u0435. \u041e\u0442\u043a\u0440\u043e\u0439 \u043e\u0440\u0438\u0433\u0438\u043d\u0430\u043b \u043f\u043e \u0441\u0441\u044b\u043b\u043a\u0435 \u043d\u0438\u0436\u0435."
+    return repaired
 
 
 def _plain_text(value):
@@ -581,7 +610,7 @@ def _extract_web_jobs(source, data):
 
 
 async def scan_websites(app: Application):
-    """Ð§Ð¸ÑÐ°ÐµÑ ÑÐ¾Ð»ÑÐºÐ¾ Ð¿ÑÐ±Ð»Ð¸ÑÐ½ÑÐµ JSON API, Ð±ÐµÐ· Ð²ÑÐ¾Ð´Ð° Ð¸ Ð¾Ð±ÑÐ¾Ð´Ð° Ð¾Ð³ÑÐ°Ð½Ð¸ÑÐµÐ½Ð¸Ð¹ ÑÐ°Ð¹ÑÐ¾Ð²."""
+    """\u0427\u0438\u0442\u0430\u0435\u0442 \u0442\u043e\u043b\u044c\u043a\u043e \u043f\u0443\u0431\u043b\u0438\u0447\u043d\u044b\u0435 JSON API, \u0431\u0435\u0437 \u0432\u0445\u043e\u0434\u0430 \u0438 \u043e\u0431\u0445\u043e\u0434\u0430 \u043e\u0433\u0440\u0430\u043d\u0438\u0447\u0435\u043d\u0438\u0439 \u0441\u0430\u0439\u0442\u043e\u0432."""
     checked = errors = found = 0
     for source, url in WEB_SOURCES.items():
         try:
@@ -589,7 +618,11 @@ async def scan_websites(app: Application):
             checked += 1
             for item in _extract_web_jobs(source, data):
                 title = _repair_mojibake(str(item.get("title") or "")).strip()
+                if _has_mojibake(title):
+                    title = ""
                 description = _repair_mojibake(str(item.get("description") or "")).strip()
+                if _has_mojibake(description):
+                    description = ""
                 link = str(item.get("url") or "").strip()
                 job_id = str(item.get("id") or link).strip()
                 if not title or not link or not job_id:
@@ -608,11 +641,11 @@ async def scan_websites(app: Application):
                 if was_seen(key):
                     continue
                 body = (
-                    f"ð <b>ÐÐ°ÑÑÐ±ÐµÐ¶Ð½ÑÐ¹ ÑÐ°Ð¹Ñ: {html.escape(source)}</b>\n"
-                    f"ð¼ <b>{html.escape(title[:300])}</b>\n"
-                    f"ð¢ {html.escape(_repair_mojibake(str(item.get('company') or 'ÐÐ¾Ð¼Ð¿Ð°Ð½Ð¸Ñ Ð½Ðµ ÑÐºÐ°Ð·Ð°Ð½Ð°'))[:200])}\n\n"
+                    f"\U0001f310 <b>\u0417\u0430\u0440\u0443\u0431\u0435\u0436\u043d\u044b\u0439 \u0441\u0430\u0439\u0442: {html.escape(source)}</b>\n"
+                    f"\U0001f4bc <b>{html.escape(title[:300])}</b>\n"
+                    f"\U0001f3e2 {html.escape(_repair_mojibake(str(item.get('company') or '\u041a\u043e\u043c\u043f\u0430\u043d\u0438\u044f \u043d\u0435 \u0443\u043a\u0430\u0437\u0430\u043d\u0430'))[:200])}\n\n"
                     f"{html.escape(_plain_text(description)[:2200])}\n\n"
-                    f"ð Ð¢ÐµÐ¼Ð°ÑÐ¸ÐºÐ°: {html.escape(', '.join(k for k in WEB_KEYWORDS if k.casefold() in (title + ' ' + _plain_text(description)).casefold())[:500])}"
+                    f"\U0001f50e \u0422\u0435\u043c\u0430\u0442\u0438\u043a\u0430: {html.escape(', '.join(k for k in WEB_KEYWORDS if k.casefold() in (title + ' ' + _plain_text(description)).casefold())[:500])}"
                 )
                 with db() as con:
                     con.execute(
@@ -635,8 +668,8 @@ async def scan_websites(app: Application):
                 try:
                     await app.bot.send_message(
                         chat_id=int(user_id),
-                        text=f"ð ÐÐ°Ð¹Ð´ÐµÐ½Ñ Ð½Ð¾Ð²ÑÐµ Ð²Ð°ÐºÐ°Ð½ÑÐ¸Ð¸ Ð½Ð° Ð·Ð°ÑÑÐ±ÐµÐ¶Ð½ÑÑ ÑÐ°Ð¹ÑÐ°Ñ: {found}\nð ÐÐ¶Ð¸Ð´Ð°ÑÑ Ð¿ÑÐ¾ÑÐ¼Ð¾ÑÑÐ°: {count}",
-                        reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("ð Ð¡Ð¼Ð¾ÑÑÐµÑÑ Ð·Ð°ÐºÐ°Ð·Ñ", callback_data="queue:open")]]),
+                        text=f"\U0001f310 \u041d\u0430\u0439\u0434\u0435\u043d\u044b \u043d\u043e\u0432\u044b\u0435 \u0432\u0430\u043a\u0430\u043d\u0441\u0438\u0438 \u043d\u0430 \u0437\u0430\u0440\u0443\u0431\u0435\u0436\u043d\u044b\u0445 \u0441\u0430\u0439\u0442\u0430\u0445: {found}\n\U0001f4cb \u041e\u0436\u0438\u0434\u0430\u044e\u0442 \u043f\u0440\u043e\u0441\u043c\u043e\u0442\u0440\u0430: {count}",
+                        reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("\U0001f440 \u0421\u043c\u043e\u0442\u0440\u0435\u0442\u044c \u0437\u0430\u043a\u0430\u0437\u044b", callback_data="queue:open")]]),
                     )
                 except TelegramError as exc:
                     log.warning("Website queue notice failed for %s: %s", user_id, type(exc).__name__)
@@ -709,39 +742,39 @@ async def show_next(query, user_id: str):
     jobs = pending_jobs(user_id)
     if not jobs:
         await query.edit_message_text(
-            f"ð ÐÑÐµ Ð¾Ð±ÑÑÐ²Ð»ÐµÐ½Ð¸Ñ Ð¿ÑÐ¾ÑÐ¼Ð¾ÑÑÐµÐ½Ñ!\nâ­ Ð¡Ð¾ÑÑÐ°Ð½ÐµÐ½Ð¾: {saved_count(user_id)}",
+            f"\U0001f389 \u0412\u0441\u0435 \u043e\u0431\u044a\u044f\u0432\u043b\u0435\u043d\u0438\u044f \u043f\u0440\u043e\u0441\u043c\u043e\u0442\u0440\u0435\u043d\u044b!\n\u2b50 \u0421\u043e\u0445\u0440\u0430\u043d\u0435\u043d\u043e: {saved_count(user_id)}",
             reply_markup=None,
         )
         return
     key, body, channel, link = jobs[0]
     total = len(jobs)
-    # ÐÐ¾Ð¼ÐµÑ ÑÐµÐºÑÑÐµÐ³Ð¾ Ð¾Ð±ÑÑÐ²Ð»ÐµÐ½Ð¸Ñ Ð¾ÑÐ½Ð¾ÑÐ¸ÑÐµÐ»ÑÐ½Ð¾ ÑÐ¶Ðµ Ð¿ÑÐ¾ÑÐ¼Ð¾ÑÑÐµÐ½Ð½ÑÑ Ð² ÑÑÐ¾Ð¹ Ð¾ÑÐµÑÐµÐ´Ð¸.
+    # \u041d\u043e\u043c\u0435\u0440 \u0442\u0435\u043a\u0443\u0449\u0435\u0433\u043e \u043e\u0431\u044a\u044f\u0432\u043b\u0435\u043d\u0438\u044f \u043e\u0442\u043d\u043e\u0441\u0438\u0442\u0435\u043b\u044c\u043d\u043e \u0443\u0436\u0435 \u043f\u0440\u043e\u0441\u043c\u043e\u0442\u0440\u0435\u043d\u043d\u044b\u0445 \u0432 \u044d\u0442\u043e\u0439 \u043e\u0447\u0435\u0440\u0435\u0434\u0438.
     with db() as con:
         reviewed = con.execute(
             "SELECT COUNT(*) FROM decisions WHERE user_id=?", (str(user_id),)
         ).fetchone()[0]
     number = reviewed + 1
     text = (
-        f"ð <b>ÐÐ°ÐºÐ°Ð· {number} Ð¸Ð· {number + total - 1}</b>\n"
-        f"â­ Ð¡Ð¾ÑÑÐ°Ð½ÐµÐ½Ð¾: {saved_count(user_id)}\n\n"
-        f"{html.escape(body)}\n\n"
-        f"ð£ ÐÑÑÐ¾ÑÐ½Ð¸Ðº: {html.escape(channel)}\n"
-        f'<a href="{html.escape(link, quote=True)}">ÐÑÐºÑÑÑÑ Ð¾ÑÐ¸Ð³Ð¸Ð½Ð°Ð»</a>'
+        f"\U0001f4cb <b>\u0417\u0430\u043a\u0430\u0437 {number} \u0438\u0437 {number + total - 1}</b>\n"
+        f"\u2b50 \u0421\u043e\u0445\u0440\u0430\u043d\u0435\u043d\u043e: {saved_count(user_id)}\n\n"
+        f"{html.escape(_safe_job_body(body))}\n\n"
+        f"\U0001f4e3 \u0418\u0441\u0442\u043e\u0447\u043d\u0438\u043a: {html.escape(channel)}\n"
+        f'<a href="{html.escape(link, quote=True)}">\u041e\u0442\u043a\u0440\u044b\u0442\u044c \u043e\u0440\u0438\u0433\u0438\u043d\u0430\u043b</a>'
     )
-    # ÐÐ¾ÑÐ¾ÑÐºÐ¸Ðµ callback_data: Telegram Ð´Ð¾Ð¿ÑÑÐºÐ°ÐµÑ Ð½Ðµ Ð±Ð¾Ð»ÐµÐµ 64 Ð±Ð°Ð¹Ñ.
-    # Ð¢ÐµÐºÑÑÐ¸Ð¹ Ð·Ð°ÐºÐ°Ð· Ð±ÐµÑÑÑÑÑ Ð¸Ð· Ð¾ÑÐµÑÐµÐ´Ð¸ Ð¿Ð¾Ð»ÑÐ·Ð¾Ð²Ð°ÑÐµÐ»Ñ Ð² queue_callback.
+    # \u041a\u043e\u0440\u043e\u0442\u043a\u0438\u0435 callback_data: Telegram \u0434\u043e\u043f\u0443\u0441\u043a\u0430\u0435\u0442 \u043d\u0435 \u0431\u043e\u043b\u0435\u0435 64 \u0431\u0430\u0439\u0442.
+    # \u0422\u0435\u043a\u0443\u0449\u0438\u0439 \u0437\u0430\u043a\u0430\u0437 \u0431\u0435\u0440\u0451\u0442\u0441\u044f \u0438\u0437 \u043e\u0447\u0435\u0440\u0435\u0434\u0438 \u043f\u043e\u043b\u044c\u0437\u043e\u0432\u0430\u0442\u0435\u043b\u044f \u0432 queue_callback.
     keyboard = InlineKeyboardMarkup([
-        [InlineKeyboardButton("â ÐÑÐ¾Ð¿ÑÑÑÐ¸ÑÑ", callback_data="queue:skip"),
-         InlineKeyboardButton("â ÐÑÑÐ°Ð²Ð¸ÑÑ", callback_data="queue:keep")],
-        [InlineKeyboardButton("ð·ðº ÐÐµÑÐµÐ²ÐµÑÑÐ¸", callback_data="queue:translate")],
-        [InlineKeyboardButton("â¬ï¸ ÐÐ°Ð·Ð°Ð´", callback_data="queue:back")],
+        [InlineKeyboardButton("\u274c \u041f\u0440\u043e\u043f\u0443\u0441\u0442\u0438\u0442\u044c", callback_data="queue:skip"),
+         InlineKeyboardButton("\u2705 \u041e\u0441\u0442\u0430\u0432\u0438\u0442\u044c", callback_data="queue:keep")],
+        [InlineKeyboardButton("\U0001f1f7\U0001f1fa \u041f\u0435\u0440\u0435\u0432\u0435\u0441\u0442\u0438", callback_data="queue:translate")],
+        [InlineKeyboardButton("\u2b05\ufe0f \u041d\u0430\u0437\u0430\u0434", callback_data="queue:back")],
     ])
     text = _repair_mojibake(text)
     await query.edit_message_text(text, parse_mode="HTML", reply_markup=keyboard, disable_web_page_preview=True)
 
 
 def translate_to_russian(text: str) -> str:
-    """ÐÐµÑÐµÐ²Ð¾Ð´Ð¸Ñ ÑÐµÐºÑÑ ÑÐµÑÐµÐ· Ð¿ÑÐ±Ð»Ð¸ÑÐ½ÑÐ¹ Google Translate endpoint."""
+    """\u041f\u0435\u0440\u0435\u0432\u043e\u0434\u0438\u0442 \u0442\u0435\u043a\u0441\u0442 \u0447\u0435\u0440\u0435\u0437 \u043f\u0443\u0431\u043b\u0438\u0447\u043d\u044b\u0439 Google Translate endpoint."""
     params = urllib.parse.urlencode({
         "client": "gtx", "sl": "auto", "tl": "ru", "dt": "t", "q": text[:4000]
     })
@@ -758,27 +791,27 @@ async def queue_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
     query = update.callback_query
     user_id = str(query.from_user.id)
     if user_id not in ALLOWED_USER_IDS:
-        await query.answer("ÐÐ¾ÑÑÑÐ¿ Ð·Ð°ÐºÑÑÑ.", show_alert=True)
+        await query.answer("\u0414\u043e\u0441\u0442\u0443\u043f \u0437\u0430\u043a\u0440\u044b\u0442.", show_alert=True)
         return
     data = query.data or ""
     if data == "queue:translate":
-        await query.answer("ÐÐµÑÐµÐ²Ð¾Ð¶Ñâ¦")
+        await query.answer("\u041f\u0435\u0440\u0435\u0432\u043e\u0436\u0443\u2026")
         jobs = pending_jobs(user_id)
         if not jobs:
-            await query.answer("ÐÑÐµÑÐµÐ´Ñ Ð¿ÑÑÑÐ°.", show_alert=True)
+            await query.answer("\u041e\u0447\u0435\u0440\u0435\u0434\u044c \u043f\u0443\u0441\u0442\u0430.", show_alert=True)
             return
         key, body, channel, link = jobs[0]
         try:
             translated = await asyncio.to_thread(translate_to_russian, body)
             translated = translated[:3500]
             await query.message.reply_text(
-                "ð·ðº <b>ÐÐµÑÐµÐ²Ð¾Ð´ Ð½Ð° ÑÑÑÑÐºÐ¸Ð¹</b>\n\n" + html.escape(translated),
+                "\U0001f1f7\U0001f1fa <b>\u041f\u0435\u0440\u0435\u0432\u043e\u0434 \u043d\u0430 \u0440\u0443\u0441\u0441\u043a\u0438\u0439</b>\n\n" + html.escape(translated),
                 parse_mode="HTML", disable_web_page_preview=True,
             )
         except Exception as exc:
             log.warning("Translation failed: %s", type(exc).__name__)
             await query.message.reply_text(
-                "â ï¸ ÐÐµ ÑÐ´Ð°Ð»Ð¾ÑÑ Ð¿ÐµÑÐµÐ²ÐµÑÑÐ¸. ÐÐ¾Ð¿ÑÐ¾Ð±ÑÐ¹ Ð¿Ð¾Ð·Ð¶Ðµ."
+                "\u26a0\ufe0f \u041d\u0435 \u0443\u0434\u0430\u043b\u043e\u0441\u044c \u043f\u0435\u0440\u0435\u0432\u0435\u0441\u0442\u0438. \u041f\u043e\u043f\u0440\u043e\u0431\u0443\u0439 \u043f\u043e\u0437\u0436\u0435."
             )
         return
     if data == "queue:open":
@@ -801,7 +834,7 @@ async def queue_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await query.answer()
         jobs = pending_jobs(user_id)
         if not jobs:
-            await query.edit_message_text("ð­ ÐÑÐµÑÐµÐ´Ñ Ð¿ÑÑÑÐ°.", reply_markup=None)
+            await query.edit_message_text("\U0001f4ed \u041e\u0447\u0435\u0440\u0435\u0434\u044c \u043f\u0443\u0441\u0442\u0430.", reply_markup=None)
             return
         key = jobs[0][0]
         decision = "keep" if data == "queue:keep" else "skip"
@@ -817,7 +850,7 @@ async def queue_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 async def saved_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if not is_owner(update):
-        await reply(update, "ÐÐ¾ÑÑÑÐ¿ Ð·Ð°ÐºÑÑÑ.")
+        await reply(update, "\u0414\u043e\u0441\u0442\u0443\u043f \u0437\u0430\u043a\u0440\u044b\u0442.")
         return
     user_id = str(update.effective_user.id)
     with db() as con:
@@ -827,10 +860,10 @@ async def saved_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
             (user_id,),
         ).fetchall()
     if not rows:
-        await reply(update, "â­ ÐÐ¾ÐºÐ° Ð½ÐµÑ ÑÐ¾ÑÑÐ°Ð½ÑÐ½Ð½ÑÑ Ð·Ð°ÐºÐ°Ð·Ð¾Ð².")
+        await reply(update, "\u2b50 \u041f\u043e\u043a\u0430 \u043d\u0435\u0442 \u0441\u043e\u0445\u0440\u0430\u043d\u0451\u043d\u043d\u044b\u0445 \u0437\u0430\u043a\u0430\u0437\u043e\u0432.")
         return
-    text = "â­ <b>Ð¡Ð¾ÑÑÐ°Ð½ÑÐ½Ð½ÑÐµ Ð·Ð°ÐºÐ°Ð·Ñ</b>\n\n" + "\n\n".join(
-        f"{i}. {html.escape(body[:700])}\n<a href=\"{html.escape(link, quote=True)}\">ÐÑÐºÑÑÑÑ Ð¾ÑÐ¸Ð³Ð¸Ð½Ð°Ð»</a>"
+    text = "\u2b50 <b>\u0421\u043e\u0445\u0440\u0430\u043d\u0451\u043d\u043d\u044b\u0435 \u0437\u0430\u043a\u0430\u0437\u044b</b>\n\n" + "\n\n".join(
+        f"{i}. {html.escape(body[:700])}\n<a href=\"{html.escape(link, quote=True)}\">\u041e\u0442\u043a\u0440\u044b\u0442\u044c \u043e\u0440\u0438\u0433\u0438\u043d\u0430\u043b</a>"
         for i, (body, link) in enumerate(rows, 1)
     )
     await update.effective_chat.send_message(text=text, parse_mode="HTML", disable_web_page_preview=True)
@@ -838,7 +871,7 @@ async def saved_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 async def stats_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if not is_owner(update):
-        await reply(update, "ÐÐ¾ÑÑÑÐ¿ Ð·Ð°ÐºÑÑÑ.")
+        await reply(update, "\u0414\u043e\u0441\u0442\u0443\u043f \u0437\u0430\u043a\u0440\u044b\u0442.")
         return
     user_id = str(update.effective_user.id)
     with db() as con:
@@ -846,129 +879,129 @@ async def stats_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
         kept = con.execute("SELECT COUNT(*) FROM decisions WHERE user_id=? AND decision='keep'", (user_id,)).fetchone()[0]
         skipped = con.execute("SELECT COUNT(*) FROM decisions WHERE user_id=? AND decision='skip'", (user_id,)).fetchone()[0]
     paused, keyword = get_pref(user_id)
-    await reply(update, f"ð Ð¢Ð²Ð¾Ñ ÑÑÐ°ÑÐ¸ÑÑÐ¸ÐºÐ°\nÐÑÐµÐ³Ð¾ Ð½Ð°Ð¹Ð´ÐµÐ½Ð¾: {total}\nâ­ Ð¡Ð¾ÑÑÐ°Ð½ÐµÐ½Ð¾: {kept}\nâ ÐÑÐ¾Ð¿ÑÑÐµÐ½Ð¾: {skipped}\nâ³ ÐÐ¶Ð¸Ð´Ð°ÑÑ Ð¿ÑÐ¾ÑÐ¼Ð¾ÑÑÐ°: {pending_count(user_id)}\nÐ£Ð²ÐµÐ´Ð¾Ð¼Ð»ÐµÐ½Ð¸Ñ: {'Ð¿Ð°ÑÐ·Ð°' if paused else 'Ð²ÐºÐ»ÑÑÐµÐ½Ñ'}\nÐ¤Ð¸Ð»ÑÑÑ: {html.escape(keyword) if keyword else 'Ð½Ðµ Ð·Ð°Ð´Ð°Ð½'}")
+    await reply(update, f"\U0001f4ca \u0422\u0432\u043e\u044f \u0441\u0442\u0430\u0442\u0438\u0441\u0442\u0438\u043a\u0430\n\u0412\u0441\u0435\u0433\u043e \u043d\u0430\u0439\u0434\u0435\u043d\u043e: {total}\n\u2b50 \u0421\u043e\u0445\u0440\u0430\u043d\u0435\u043d\u043e: {kept}\n\u274c \u041f\u0440\u043e\u043f\u0443\u0449\u0435\u043d\u043e: {skipped}\n\u23f3 \u041e\u0436\u0438\u0434\u0430\u044e\u0442 \u043f\u0440\u043e\u0441\u043c\u043e\u0442\u0440\u0430: {pending_count(user_id)}\n\u0423\u0432\u0435\u0434\u043e\u043c\u043b\u0435\u043d\u0438\u044f: {'\u043f\u0430\u0443\u0437\u0430' if paused else '\u0432\u043a\u043b\u044e\u0447\u0435\u043d\u044b'}\n\u0424\u0438\u043b\u044c\u0442\u0440: {html.escape(keyword) if keyword else '\u043d\u0435 \u0437\u0430\u0434\u0430\u043d'}")
 
 
 async def pause_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if not is_owner(update):
-        await reply(update, "ÐÐ¾ÑÑÑÐ¿ Ð·Ð°ÐºÑÑÑ.")
+        await reply(update, "\u0414\u043e\u0441\u0442\u0443\u043f \u0437\u0430\u043a\u0440\u044b\u0442.")
         return
     user_id = str(update.effective_user.id)
     paused, _ = get_pref(user_id)
     set_paused(user_id, not paused)
-    await reply(update, "â¸ï¸ Ð£Ð²ÐµÐ´Ð¾Ð¼Ð»ÐµÐ½Ð¸Ñ Ð¿ÑÐ¸Ð¾ÑÑÐ°Ð½Ð¾Ð²Ð»ÐµÐ½Ñ. ÐÑÐµÑÐµÐ´Ñ Ð´Ð¾ÑÑÑÐ¿Ð½Ð° ÐºÐ¾Ð¼Ð°Ð½Ð´Ð¾Ð¹ /queue." if not paused else "â¶ï¸ Ð£Ð²ÐµÐ´Ð¾Ð¼Ð»ÐµÐ½Ð¸Ñ ÑÐ½Ð¾Ð²Ð° Ð²ÐºÐ»ÑÑÐµÐ½Ñ.")
+    await reply(update, "\u23f8\ufe0f \u0423\u0432\u0435\u0434\u043e\u043c\u043b\u0435\u043d\u0438\u044f \u043f\u0440\u0438\u043e\u0441\u0442\u0430\u043d\u043e\u0432\u043b\u0435\u043d\u044b. \u041e\u0447\u0435\u0440\u0435\u0434\u044c \u0434\u043e\u0441\u0442\u0443\u043f\u043d\u0430 \u043a\u043e\u043c\u0430\u043d\u0434\u043e\u0439 /queue." if not paused else "\u25b6\ufe0f \u0423\u0432\u0435\u0434\u043e\u043c\u043b\u0435\u043d\u0438\u044f \u0441\u043d\u043e\u0432\u0430 \u0432\u043a\u043b\u044e\u0447\u0435\u043d\u044b.")
 
 
 async def filter_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if not is_owner(update):
-        await reply(update, "ÐÐ¾ÑÑÑÐ¿ Ð·Ð°ÐºÑÑÑ.")
+        await reply(update, "\u0414\u043e\u0441\u0442\u0443\u043f \u0437\u0430\u043a\u0440\u044b\u0442.")
         return
     user_id = str(update.effective_user.id)
     keyword = " ".join(context.args).strip()
     if keyword.lower() == "clear":
         keyword = ""
     set_keyword(user_id, keyword)
-    await reply(update, (f"ð Ð¤Ð¸Ð»ÑÑÑ ÑÑÑÐ°Ð½Ð¾Ð²Ð»ÐµÐ½: {html.escape(keyword)}\nÐ Ð¾ÑÐµÑÐµÐ´Ð¸: {pending_count(user_id)}" if keyword else "ð Ð¤Ð¸Ð»ÑÑÑ Ð¾ÑÐ¸ÑÐµÐ½. ÐÐ¾ÐºÐ°Ð·ÑÐ²Ð°Ñ Ð²ÑÐµ Ð¿Ð¾Ð´ÑÐ¾Ð´ÑÑÐ¸Ðµ Ð¾Ð±ÑÑÐ²Ð»ÐµÐ½Ð¸Ñ."))
+    await reply(update, (f"\U0001f50d \u0424\u0438\u043b\u044c\u0442\u0440 \u0443\u0441\u0442\u0430\u043d\u043e\u0432\u043b\u0435\u043d: {html.escape(keyword)}\n\u0412 \u043e\u0447\u0435\u0440\u0435\u0434\u0438: {pending_count(user_id)}" if keyword else "\U0001f50d \u0424\u0438\u043b\u044c\u0442\u0440 \u043e\u0447\u0438\u0449\u0435\u043d. \u041f\u043e\u043a\u0430\u0437\u044b\u0432\u0430\u044e \u0432\u0441\u0435 \u043f\u043e\u0434\u0445\u043e\u0434\u044f\u0449\u0438\u0435 \u043e\u0431\u044a\u044f\u0432\u043b\u0435\u043d\u0438\u044f."))
 
 
 async def queue_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if not is_owner(update):
-        await reply(update, "ÐÐ¾ÑÑÑÐ¿ Ð·Ð°ÐºÑÑÑ.")
+        await reply(update, "\u0414\u043e\u0441\u0442\u0443\u043f \u0437\u0430\u043a\u0440\u044b\u0442.")
         return
     user_id = str(update.effective_user.id)
     jobs = pending_jobs(user_id)
     if not jobs:
-        await reply(update, "ð­ ÐÐµÑ Ð¾Ð±ÑÑÐ²Ð»ÐµÐ½Ð¸Ð¹ Ð´Ð»Ñ Ð¿ÑÐ¾ÑÐ¼Ð¾ÑÑÐ°. ÐÐ¾Ð¿ÑÐ¾Ð±ÑÐ¹ /scan Ð¸Ð»Ð¸ Ð¾ÑÐ¸ÑÑÐ¸ ÑÐ¸Ð»ÑÑÑ ÐºÐ¾Ð¼Ð°Ð½Ð´Ð¾Ð¹ /filter clear.")
+        await reply(update, "\U0001f4ed \u041d\u0435\u0442 \u043e\u0431\u044a\u044f\u0432\u043b\u0435\u043d\u0438\u0439 \u0434\u043b\u044f \u043f\u0440\u043e\u0441\u043c\u043e\u0442\u0440\u0430. \u041f\u043e\u043f\u0440\u043e\u0431\u0443\u0439 /scan \u0438\u043b\u0438 \u043e\u0447\u0438\u0441\u0442\u0438 \u0444\u0438\u043b\u044c\u0442\u0440 \u043a\u043e\u043c\u0430\u043d\u0434\u043e\u0439 /filter clear.")
         return
     await update.effective_chat.send_message(
-        text=f"ð ÐÐ°Ð¹Ð´ÐµÐ½Ð¾ Ð´Ð»Ñ Ð¿ÑÐ¾ÑÐ¼Ð¾ÑÑÐ°: {len(jobs)}\nÐÐ°Ð¶Ð¼Ð¸ ÐºÐ½Ð¾Ð¿ÐºÑ, ÑÑÐ¾Ð±Ñ Ð½Ð°ÑÐ°ÑÑ.",
-        reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("ð Ð¡Ð¼Ð¾ÑÑÐµÑÑ Ð·Ð°ÐºÐ°Ð·Ñ", callback_data="queue:open")]]),
+        text=f"\U0001f4cb \u041d\u0430\u0439\u0434\u0435\u043d\u043e \u0434\u043b\u044f \u043f\u0440\u043e\u0441\u043c\u043e\u0442\u0440\u0430: {len(jobs)}\n\u041d\u0430\u0436\u043c\u0438 \u043a\u043d\u043e\u043f\u043a\u0443, \u0447\u0442\u043e\u0431\u044b \u043d\u0430\u0447\u0430\u0442\u044c.",
+        reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("\U0001f440 \u0421\u043c\u043e\u0442\u0440\u0435\u0442\u044c \u0437\u0430\u043a\u0430\u0437\u044b", callback_data="queue:open")]]),
     )
 
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if not is_owner(update):
-        await reply(update, "ÐÐ¾ÑÑÑÐ¿ Ð·Ð°ÐºÑÑÑ.")
+        await reply(update, "\u0414\u043e\u0441\u0442\u0443\u043f \u0437\u0430\u043a\u0440\u044b\u0442.")
         return
     await reply(
         update,
-        "ÐÑÐ¸Ð²ÐµÑ! Ð¯ Ð¸ÑÑ ÑÐ²ÐµÐ¶Ð¸Ðµ Ð¾Ð±ÑÑÐ²Ð»ÐµÐ½Ð¸Ñ Ð¾ Ð·Ð°ÐºÐ°Ð·Ð°Ñ Ð½Ð° Ð´Ð¸Ð·Ð°Ð¹Ð½ ÐºÐ°ÑÑÐ¾ÑÐµÐº ÑÐ¾Ð²Ð°ÑÐ¾Ð².\n\n"
-        f"ÐÐ¾Ð·ÑÐ°ÑÑ Ð¾Ð±ÑÑÐ²Ð»ÐµÐ½Ð¸Ð¹: Ð´Ð¾ {MAX_AGE_HOURS} Ñ.\n"
-        f"ÐÐ½ÑÐµÑÐ²Ð°Ð» Ð¿ÑÐ¾Ð²ÐµÑÐºÐ¸: {SCAN_MINUTES} Ð¼Ð¸Ð½.\n\n"
-        "/status â ÑÐ¾ÑÑÐ¾ÑÐ½Ð¸Ðµ\n"
-        "/scan â Ð¿ÑÐ¾Ð²ÐµÑÐ¸ÑÑ Telegram-ÐºÐ°Ð½Ð°Ð»Ñ ÑÐµÐ¹ÑÐ°Ñ\n"
-        "/webscan â Ð¿ÑÐ¾Ð²ÐµÑÐ¸ÑÑ Ð·Ð°ÑÑÐ±ÐµÐ¶Ð½ÑÐµ ÑÐ°Ð¹ÑÑ ÑÐµÐ¹ÑÐ°Ñ\n"
-        "/saved â ÑÐ¾ÑÑÐ°Ð½ÑÐ½Ð½ÑÐµ Ð·Ð°ÐºÐ°Ð·Ñ\n"
-        "/stats â ÑÑÐ°ÑÐ¸ÑÑÐ¸ÐºÐ°\n"
-        "/queue â Ð¾ÑÐºÑÑÑÑ Ð¾ÑÐµÑÐµÐ´Ñ\n"
-        "/pause â Ð¿Ð°ÑÐ·Ð°/Ð²Ð¾Ð·Ð¾Ð±Ð½Ð¾Ð²Ð»ÐµÐ½Ð¸Ðµ ÑÐ²ÐµÐ´Ð¾Ð¼Ð»ÐµÐ½Ð¸Ð¹\n"
-        "/filter ÑÐ»Ð¾Ð²Ð¾ â ÑÐ¸Ð»ÑÑÑ Ð¿Ð¾ ÑÐ»Ð¾Ð²Ð°Ð¼; /filter clear â ÑÐ±ÑÐ¾Ñ\n"
-        "/myid â ÑÐ·Ð½Ð°ÑÑ Telegram ID\n"
-        "ÐÐ¾Ð¸ÑÐº ÑÐ°Ð±Ð¾ÑÐ°ÐµÑ Ð±ÐµÐ· Ð½ÐµÐ¹ÑÐ¾ÑÐµÑÐ¸.",
+        "\u041f\u0440\u0438\u0432\u0435\u0442! \u042f \u0438\u0449\u0443 \u0441\u0432\u0435\u0436\u0438\u0435 \u043e\u0431\u044a\u044f\u0432\u043b\u0435\u043d\u0438\u044f \u043e \u0437\u0430\u043a\u0430\u0437\u0430\u0445 \u043d\u0430 \u0434\u0438\u0437\u0430\u0439\u043d \u043a\u0430\u0440\u0442\u043e\u0447\u0435\u043a \u0442\u043e\u0432\u0430\u0440\u043e\u0432.\n\n"
+        f"\u0412\u043e\u0437\u0440\u0430\u0441\u0442 \u043e\u0431\u044a\u044f\u0432\u043b\u0435\u043d\u0438\u0439: \u0434\u043e {MAX_AGE_HOURS} \u0447.\n"
+        f"\u0418\u043d\u0442\u0435\u0440\u0432\u0430\u043b \u043f\u0440\u043e\u0432\u0435\u0440\u043a\u0438: {SCAN_MINUTES} \u043c\u0438\u043d.\n\n"
+        "/status \u2014 \u0441\u043e\u0441\u0442\u043e\u044f\u043d\u0438\u0435\n"
+        "/scan \u2014 \u043f\u0440\u043e\u0432\u0435\u0440\u0438\u0442\u044c Telegram-\u043a\u0430\u043d\u0430\u043b\u044b \u0441\u0435\u0439\u0447\u0430\u0441\n"
+        "/webscan \u2014 \u043f\u0440\u043e\u0432\u0435\u0440\u0438\u0442\u044c \u0437\u0430\u0440\u0443\u0431\u0435\u0436\u043d\u044b\u0435 \u0441\u0430\u0439\u0442\u044b \u0441\u0435\u0439\u0447\u0430\u0441\n"
+        "/saved \u2014 \u0441\u043e\u0445\u0440\u0430\u043d\u0451\u043d\u043d\u044b\u0435 \u0437\u0430\u043a\u0430\u0437\u044b\n"
+        "/stats \u2014 \u0441\u0442\u0430\u0442\u0438\u0441\u0442\u0438\u043a\u0430\n"
+        "/queue \u2014 \u043e\u0442\u043a\u0440\u044b\u0442\u044c \u043e\u0447\u0435\u0440\u0435\u0434\u044c\n"
+        "/pause \u2014 \u043f\u0430\u0443\u0437\u0430/\u0432\u043e\u0437\u043e\u0431\u043d\u043e\u0432\u043b\u0435\u043d\u0438\u0435 \u0443\u0432\u0435\u0434\u043e\u043c\u043b\u0435\u043d\u0438\u0439\n"
+        "/filter \u0441\u043b\u043e\u0432\u043e \u2014 \u0444\u0438\u043b\u044c\u0442\u0440 \u043f\u043e \u0441\u043b\u043e\u0432\u0430\u043c; /filter clear \u2014 \u0441\u0431\u0440\u043e\u0441\n"
+        "/myid \u2014 \u0443\u0437\u043d\u0430\u0442\u044c Telegram ID\n"
+        "\u041f\u043e\u0438\u0441\u043a \u0440\u0430\u0431\u043e\u0442\u0430\u0435\u0442 \u0431\u0435\u0437 \u043d\u0435\u0439\u0440\u043e\u0441\u0435\u0442\u0438.",
     )
 
 
 async def myid(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await reply(
         update,
-        f"Ð¢Ð²Ð¾Ð¹ Telegram ID: "
-        f"{update.effective_user.id if update.effective_user else 'Ð½Ðµ Ð¾Ð¿ÑÐµÐ´ÐµÐ»ÑÐ½'}",
+        f"\u0422\u0432\u043e\u0439 Telegram ID: "
+        f"{update.effective_user.id if update.effective_user else '\u043d\u0435 \u043e\u043f\u0440\u0435\u0434\u0435\u043b\u0451\u043d'}",
     )
 
 
 async def status(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if not is_owner(update):
-        await reply(update, "ÐÐ¾ÑÑÑÐ¿ Ð·Ð°ÐºÑÑÑ.")
+        await reply(update, "\u0414\u043e\u0441\u0442\u0443\u043f \u0437\u0430\u043a\u0440\u044b\u0442.")
         return
     connected = user_client is not None and user_client.is_connected()
     await reply(
         update,
-        f"ð¢ ÐÐ¾Ñ Ð·Ð°Ð¿ÑÑÐµÐ½\n"
-        f"Telegram-Ð°ÐºÐºÐ°ÑÐ½Ñ Ð¿Ð¾Ð´ÐºÐ»ÑÑÑÐ½: {'Ð´Ð°' if connected else 'Ð½ÐµÑ'}\n"
-        f"ÐÐ¾Ð»ÑÐ·Ð¾Ð²Ð°ÑÐµÐ»ÐµÐ¹: {len(ALLOWED_USER_IDS)}\n"
-        f"ÐÐ°Ð½Ð°Ð»Ð¾Ð² Ð² ÑÐ¿Ð¸ÑÐºÐµ: {len(CHANNELS)}\n"
-        f"Ð¡Ð°Ð¹ÑÐ¾Ð² Ð²Ð°ÐºÐ°Ð½ÑÐ¸Ð¹: {len(WEB_SOURCES)}\n"
-        f"ÐÑÐ¾Ð²ÐµÑÐºÐ° ÑÐ°Ð¹ÑÐ¾Ð²: ÐºÐ°Ð¶Ð´ÑÐµ {WEB_SCAN_HOURS} Ñ.\n"
-        f"ÐÐ½ÑÐµÑÐ²Ð°Ð» Ð¿ÑÐ¾Ð²ÐµÑÐºÐ¸: {SCAN_MINUTES} Ð¼Ð¸Ð½.\n"
-        f"ÐÐ°ÐºÑÐ¸Ð¼Ð°Ð»ÑÐ½ÑÐ¹ Ð²Ð¾Ð·ÑÐ°ÑÑ Ð·Ð°ÑÐ²ÐºÐ¸: {MAX_AGE_HOURS} Ñ.",
+        f"\U0001f7e2 \u0411\u043e\u0442 \u0437\u0430\u043f\u0443\u0449\u0435\u043d\n"
+        f"Telegram-\u0430\u043a\u043a\u0430\u0443\u043d\u0442 \u043f\u043e\u0434\u043a\u043b\u044e\u0447\u0451\u043d: {'\u0434\u0430' if connected else '\u043d\u0435\u0442'}\n"
+        f"\u041f\u043e\u043b\u044c\u0437\u043e\u0432\u0430\u0442\u0435\u043b\u0435\u0439: {len(ALLOWED_USER_IDS)}\n"
+        f"\u041a\u0430\u043d\u0430\u043b\u043e\u0432 \u0432 \u0441\u043f\u0438\u0441\u043a\u0435: {len(CHANNELS)}\n"
+        f"\u0421\u0430\u0439\u0442\u043e\u0432 \u0432\u0430\u043a\u0430\u043d\u0441\u0438\u0439: {len(WEB_SOURCES)}\n"
+        f"\u041f\u0440\u043e\u0432\u0435\u0440\u043a\u0430 \u0441\u0430\u0439\u0442\u043e\u0432: \u043a\u0430\u0436\u0434\u044b\u0435 {WEB_SCAN_HOURS} \u0447.\n"
+        f"\u0418\u043d\u0442\u0435\u0440\u0432\u0430\u043b \u043f\u0440\u043e\u0432\u0435\u0440\u043a\u0438: {SCAN_MINUTES} \u043c\u0438\u043d.\n"
+        f"\u041c\u0430\u043a\u0441\u0438\u043c\u0430\u043b\u044c\u043d\u044b\u0439 \u0432\u043e\u0437\u0440\u0430\u0441\u0442 \u0437\u0430\u044f\u0432\u043a\u0438: {MAX_AGE_HOURS} \u0447.",
     )
 
 
 async def scan_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if not is_owner(update):
-        await reply(update, "ÐÐ¾ÑÑÑÐ¿ Ð·Ð°ÐºÑÑÑ.")
+        await reply(update, "\u0414\u043e\u0441\u0442\u0443\u043f \u0437\u0430\u043a\u0440\u044b\u0442.")
         return
     if scan_lock.locked():
-        await reply(update, "â³ ÐÑÐ¾Ð²ÐµÑÐºÐ° ÑÐ¶Ðµ Ð²ÑÐ¿Ð¾Ð»Ð½ÑÐµÑÑÑ.")
+        await reply(update, "\u23f3 \u041f\u0440\u043e\u0432\u0435\u0440\u043a\u0430 \u0443\u0436\u0435 \u0432\u044b\u043f\u043e\u043b\u043d\u044f\u0435\u0442\u0441\u044f.")
         return
-    await reply(update, "ð ÐÑÐ¾Ð²ÐµÑÑÑ Telegram-ÐºÐ°Ð½Ð°Ð»Ñâ¦")
+    await reply(update, "\U0001f50e \u041f\u0440\u043e\u0432\u0435\u0440\u044f\u044e Telegram-\u043a\u0430\u043d\u0430\u043b\u044b\u2026")
     result = await run_scan(context.application)
     if result is None:
-        await reply(update, "â ï¸ ÐÑÐ¾Ð²ÐµÑÐºÐ° Ð½Ðµ Ð·Ð°Ð²ÐµÑÑÐ¸Ð»Ð°ÑÑ. ÐÐ¾ÑÐ¼Ð¾ÑÑÐ¸ Ð¶ÑÑÐ½Ð°Ð» FadeHost.")
+        await reply(update, "\u26a0\ufe0f \u041f\u0440\u043e\u0432\u0435\u0440\u043a\u0430 \u043d\u0435 \u0437\u0430\u0432\u0435\u0440\u0448\u0438\u043b\u0430\u0441\u044c. \u041f\u043e\u0441\u043c\u043e\u0442\u0440\u0438 \u0436\u0443\u0440\u043d\u0430\u043b FadeHost.")
     else:
         await reply(
             update,
-            "â ÐÑÐ¾Ð²ÐµÑÐºÐ° Ð·Ð°Ð²ÐµÑÑÐµÐ½Ð°.\n"
-            f"ÐÐ¾ÑÑÑÐ¿Ð½Ð¾ ÐºÐ°Ð½Ð°Ð»Ð¾Ð²: {result['checked']} Ð¸Ð· {result['total']}\n"
-            f"ÐÑÐ¸Ð±Ð¾Ðº: {result['errors']}\n"
-            f"ÐÐ¾Ð²ÑÑ Ð¿Ð¾Ð´ÑÐ¾Ð´ÑÑÐ¸Ñ Ð¾Ð±ÑÑÐ²Ð»ÐµÐ½Ð¸Ð¹: {result['found']}\n"
-            f"Ð¡ÑÐ°ÑÑÑ Ð¾Ð±ÑÑÐ²Ð»ÐµÐ½Ð¸Ð¹ Ð¿ÑÐ¾Ð¿ÑÑÐµÐ½Ð¾: {result['old']}",
+            "\u2705 \u041f\u0440\u043e\u0432\u0435\u0440\u043a\u0430 \u0437\u0430\u0432\u0435\u0440\u0448\u0435\u043d\u0430.\n"
+            f"\u0414\u043e\u0441\u0442\u0443\u043f\u043d\u043e \u043a\u0430\u043d\u0430\u043b\u043e\u0432: {result['checked']} \u0438\u0437 {result['total']}\n"
+            f"\u041e\u0448\u0438\u0431\u043e\u043a: {result['errors']}\n"
+            f"\u041d\u043e\u0432\u044b\u0445 \u043f\u043e\u0434\u0445\u043e\u0434\u044f\u0449\u0438\u0445 \u043e\u0431\u044a\u044f\u0432\u043b\u0435\u043d\u0438\u0439: {result['found']}\n"
+            f"\u0421\u0442\u0430\u0440\u044b\u0445 \u043e\u0431\u044a\u044f\u0432\u043b\u0435\u043d\u0438\u0439 \u043f\u0440\u043e\u043f\u0443\u0449\u0435\u043d\u043e: {result['old']}",
         )
 
 
 
 async def webscan_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if not is_owner(update):
-        await reply(update, "ÐÐ¾ÑÑÑÐ¿ Ð·Ð°ÐºÑÑÑ.")
+        await reply(update, "\u0414\u043e\u0441\u0442\u0443\u043f \u0437\u0430\u043a\u0440\u044b\u0442.")
         return
-    await reply(update, "ð ÐÑÐ¾Ð²ÐµÑÑÑ Ð·Ð°ÑÑÐ±ÐµÐ¶Ð½ÑÐµ ÑÐ°Ð¹ÑÑ Ñ Ð²Ð°ÐºÐ°Ð½ÑÐ¸ÑÐ¼Ð¸â¦")
+    await reply(update, "\U0001f310 \u041f\u0440\u043e\u0432\u0435\u0440\u044f\u044e \u0437\u0430\u0440\u0443\u0431\u0435\u0436\u043d\u044b\u0435 \u0441\u0430\u0439\u0442\u044b \u0441 \u0432\u0430\u043a\u0430\u043d\u0441\u0438\u044f\u043c\u0438\u2026")
     result = await scan_websites(context.application)
     await reply(
         update,
-        "â ÐÑÐ¾Ð²ÐµÑÐºÐ° ÑÐ°Ð¹ÑÐ¾Ð² Ð·Ð°Ð²ÐµÑÑÐµÐ½Ð°.\n"
-        f"ÐÑÑÐ¾ÑÐ½Ð¸ÐºÐ¾Ð² Ð¿ÑÐ¾Ð²ÐµÑÐµÐ½Ð¾: {result['checked']} Ð¸Ð· {result['total']}\n"
-        f"ÐÑÐ¸Ð±Ð¾Ðº: {result['errors']}\n"
-        f"ÐÐ¾Ð²ÑÑ Ð¿Ð¾Ð´ÑÐ¾Ð´ÑÑÐ¸Ñ Ð¾Ð±ÑÑÐ²Ð»ÐµÐ½Ð¸Ð¹: {result['found']}",
+        "\u2705 \u041f\u0440\u043e\u0432\u0435\u0440\u043a\u0430 \u0441\u0430\u0439\u0442\u043e\u0432 \u0437\u0430\u0432\u0435\u0440\u0448\u0435\u043d\u0430.\n"
+        f"\u0418\u0441\u0442\u043e\u0447\u043d\u0438\u043a\u043e\u0432 \u043f\u0440\u043e\u0432\u0435\u0440\u0435\u043d\u043e: {result['checked']} \u0438\u0437 {result['total']}\n"
+        f"\u041e\u0448\u0438\u0431\u043e\u043a: {result['errors']}\n"
+        f"\u041d\u043e\u0432\u044b\u0445 \u043f\u043e\u0434\u0445\u043e\u0434\u044f\u0449\u0438\u0445 \u043e\u0431\u044a\u044f\u0432\u043b\u0435\u043d\u0438\u0439: {result['found']}",
     )
 
 async def run_scan(app: Application):
