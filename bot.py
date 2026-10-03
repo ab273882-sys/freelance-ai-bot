@@ -1,4 +1,4 @@
-
+import asyncio
 import html
 from html.parser import HTMLParser
 import logging
@@ -650,7 +650,7 @@ async def scan_websites(app: Application):
                     f"\U0001f4bc <b>{html.escape(title[:300])}</b>\n"
                     f"\U0001f3e2 {html.escape(company[:200])}\n\n"
                     f"{html.escape(_plain_text(description)[:2200])}\n\n"
-                    f"\U0001f50e \\u0422\\u0435\\u043c\\u0430\\u0442\\u0438\\u043a\\u0430: {html.escape(topics)}"
+                    f"\U0001f50e \u0422\u0435\u043c\u0430\u0442\u0438\u043a\u0430: {html.escape(topics)}"
                 )
                 with db() as con:
                     con.execute(
@@ -884,7 +884,9 @@ async def stats_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
         kept = con.execute("SELECT COUNT(*) FROM decisions WHERE user_id=? AND decision='keep'", (user_id,)).fetchone()[0]
         skipped = con.execute("SELECT COUNT(*) FROM decisions WHERE user_id=? AND decision='skip'", (user_id,)).fetchone()[0]
     paused, keyword = get_pref(user_id)
-    await reply(update, f"\U0001f4ca \u0422\u0432\u043e\u044f \u0441\u0442\u0430\u0442\u0438\u0441\u0442\u0438\u043a\u0430\n\u0412\u0441\u0435\u0433\u043e \u043d\u0430\u0439\u0434\u0435\u043d\u043e: {total}\n\u2b50 \u0421\u043e\u0445\u0440\u0430\u043d\u0435\u043d\u043e: {kept}\n\u274c \u041f\u0440\u043e\u043f\u0443\u0449\u0435\u043d\u043e: {skipped}\n\u23f3 \u041e\u0436\u0438\u0434\u0430\u044e\u0442 \u043f\u0440\u043e\u0441\u043c\u043e\u0442\u0440\u0430: {pending_count(user_id)}\n\u0423\u0432\u0435\u0434\u043e\u043c\u043b\u0435\u043d\u0438\u044f: {'\u043f\u0430\u0443\u0437\u0430' if paused else '\u0432\u043a\u043b\u044e\u0447\u0435\u043d\u044b'}\n\u0424\u0438\u043b\u044c\u0442\u0440: {html.escape(keyword) if keyword else '\u043d\u0435 \u0437\u0430\u0434\u0430\u043d'}")
+    paused_text = "\u043f\u0430\u0437\u0430" if paused else "\u0432\u043a\u043b\u044e\u0447\u0435\u043d\u044b"
+    filter_text = html.escape(keyword) if keyword else "\u043d\u0435 \u0437\u0430\u0434\u0430\u043d"
+    await reply(update, f"\U0001f4ca \u0422\u0432\u043e\u044f \u0441\u0442\u0430\u0442\u0438\u0441\u0442\u0438\u043a\u0430\n\u0412\u0441\u0435\u0433\u043e \u043d\u0430\u0439\u0434\u0435\u043d\u043e: {total}\n\u2b50 \u0421\u043e\u0445\u0440\u0430\u043d\u0435\u043d\u043e: {kept}\n\u274c \u041f\u0440\u043e\u043f\u0443\u0449\u0435\u043d\u043e: {skipped}\n\u23f3 \u041e\u0436\u0438\u0434\u0430\u044e\u0442 \u043f\u0440\u043e\u0441\u043c\u043e\u0442\u0440\u0430: {pending_count(user_id)}\n\u0423\u0432\u0435\u0434\u043e\u043c\u043b\u0435\u043d\u0438\u044f: {paused_text}\n\u0424\u0438\u043b\u044c\u0442\u0440: {filter_text}")
 
 
 async def pause_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -947,22 +949,20 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 
 async def myid(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await reply(
-        update,
-        f"\u0422\u0432\u043e\u0439 Telegram ID: "
-        f"{update.effective_user.id if update.effective_user else '\u043d\u0435 \u043e\u043f\u0440\u0435\u0434\u0435\u043b\u0451\u043d'}",
-    )
-
+    telegram_id = update.effective_user.id if update.effective_user else None
+    telegram_id_text = str(telegram_id) if telegram_id is not None else "\u043d\u0435 \u043e\u043f\u0440\u0435\u0434\u0435\u043b\u0451\u043d"
+    await reply(update, f"\u0422\u0432\u043e\u0439 Telegram ID: {telegram_id_text}")
 
 async def status(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if not is_owner(update):
         await reply(update, "\u0414\u043e\u0441\u0442\u0443\u043f \u0437\u0430\u043a\u0440\u044b\u0442.")
         return
     connected = user_client is not None and user_client.is_connected()
+    connected_text = "\u0434\u0430" if connected else "\u043d\u0435\u0442"
     await reply(
         update,
         f"\U0001f7e2 \u0411\u043e\u0442 \u0437\u0430\u043f\u0443\u0449\u0435\u043d\n"
-        f"Telegram-\u0430\u043a\u043a\u0430\u0443\u043d\u0442 \u043f\u043e\u0434\u043a\u043b\u044e\u0447\u0451\u043d: {'\u0434\u0430' if connected else '\u043d\u0435\u0442'}\n"
+        f"Telegram-\u0430\u043a\u043a\u0430\u0443\u043d\u0442 \u043f\u043e\u0434\u043a\u043b\u044e\u0447\u0451\u043d: {connected_text}\n"
         f"\u041f\u043e\u043b\u044c\u0437\u043e\u0432\u0430\u0442\u0435\u043b\u0435\u0439: {len(ALLOWED_USER_IDS)}\n"
         f"\u041a\u0430\u043d\u0430\u043b\u043e\u0432 \u0432 \u0441\u043f\u0438\u0441\u043a\u0435: {len(CHANNELS)}\n"
         f"\u0421\u0430\u0439\u0442\u043e\u0432 \u0432\u0430\u043a\u0430\u043d\u0441\u0438\u0439: {len(WEB_SOURCES)}\n"
